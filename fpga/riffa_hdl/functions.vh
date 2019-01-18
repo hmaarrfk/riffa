@@ -41,36 +41,44 @@
 //-----------------------------------------------------------------------------
 `ifndef __FUNCTIONS_VH
 `define __FUNCTIONS_VH 1
-function integer clog2;
-	input [31:0] v;
-	reg [31:0] value;
-	begin
-		value = v;
-		if (value == 1) begin
-			clog2 = 0;
-		end
-		else begin
-			value = value-1;
-			for (clog2=0; value>0; clog2=clog2+1)
-				value = value>>1;
-		end
-	end
-endfunction
-// clog2s -- calculate the ceiling log2 value, min return is 1 (safe).
-function integer clog2s;
-	input [31:0] v;
-	reg [31:0] value;
-	begin
-		value = v;
-		if (value == 1) begin
-			clog2s = 1;
-		end
-		else begin
-			value = value-1;
-			for (clog2s=0; value>0; clog2s=clog2s+1)
-				value = value>>1;
-		end
-	end
-endfunction
+// `clog2s -- calculate the ceiling log2 value, min return is 1 (safe).
+// adapted from
+// https://stackoverflow.com/questions/5269634/address-width-from-ram-depth
+`define clog2s(x) \
+   (x <= 2) ? 1 : \
+   (x <= 4) ? 2 : \
+   (x <= 8) ? 3 : \
+   (x <= 16) ? 4 : \
+   (x <= 32) ? 5 : \
+   (x <= 64) ? 6 : \
+   (x <= 128) ? 7 : \
+   (x <= 256) ? 8 : \
+   (x <= 512) ? 9 : \
+   (x <= 1024) ? 10 : \
+   (x <= 2048) ? 11 : \
+   (x <= 4096) ? 12 : \
+   (x <= 8192) ? 13 : \
+   (x <= 2**14) ? 14 : \
+   (x <= 2**15) ? 15 : \
+   (x <= 2**16) ? 16 : \
+   (x <= 2**17) ? 17 : \
+   (x <= 2**18) ? 18 : \
+   (x <= 2**19) ? 19 : \
+   (x <= 2**20) ? 20 : \
+   (x <= 2**21) ? 21 : \
+   (x <= 2**22) ? 22 : \
+   (x <= 2**23) ? 23 : \
+   (x <= 2**24) ? 24 : \
+   (x <= 2**25) ? 25 : \
+   (x <= 2**26) ? 26 : \
+   (x <= 2**27) ? 27 : \
+   (x <= 2**28) ? 28 : \
+   (x <= 2**29) ? 29 : \
+   (x <= 2**30) ? 30 : \
+   (x <= 2**31) ? 31 : \
+   (x <= 2**32) ? 32 : \
+   (x <= 2**33) ? 33 : \
+   (x <= 2**34) ? 34 : \
+   -1
 
 `endif
