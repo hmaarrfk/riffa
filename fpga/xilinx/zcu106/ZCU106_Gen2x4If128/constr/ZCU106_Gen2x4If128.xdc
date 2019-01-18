@@ -106,19 +106,34 @@ set_property PACKAGE_PIN AE15    [get_ports {LED[3]}]
 
 set_false_path -to [get_ports -filter NAME=~LED*]
 
-# Unsure what this is actually is for the ZCU106
-#
-#
-# SYS clock 100 MHz (input) signal. The sys_clk_p and sys_clk_n
-# signals are the PCI Express reference clock. Virtex-7 GT
-# Transceiver architecture requires the use of a dedicated clock
-# resources (FPGA input pins) associated with each GT Transceiver.
-# To use these pins an IBUFDS primitive (refclk_ibuf) is
-# instantiated in user's design.
-# Please refer to the Virtex-7 GT Transceiver User Guide
-# (UG) for guidelines regarding clock resource selection.
-#
-# set_property LOC IBUFDS_GTE2_X1Y5 [get_cells refclk_ibuf]
+# ZCU106 PCIe board settings
+# Their board definition file and their documentation are not consistent.....
+# they flipped the pin number of RX[3] and RX[2]
+# Does laneswizzling help>????
+# https://teledynelecroy.com/doc/understanding-lane-reversal-and-polarity
+set_property PACKAGE_PIN AJ2 [get_ports {PCI_EXP_RXP[3]}]
+set_property PACKAGE_PIN AJ1 [get_ports {PCI_EXP_RXN[3]}]
+set_property PACKAGE_PIN AH4 [get_ports {PCI_EXP_TXP[3]}]
+set_property PACKAGE_PIN AH3 [get_ports {PCI_EXP_TXN[3]}]
+
+set_property PACKAGE_PIN AG2 [get_ports {PCI_EXP_RXP[2]}]
+set_property PACKAGE_PIN AG1 [get_ports {PCI_EXP_RXN[2]}]
+set_property PACKAGE_PIN AG6 [get_ports {PCI_EXP_TXP[2]}]
+set_property PACKAGE_PIN AG5 [get_ports {PCI_EXP_TXN[2]}]
+
+set_property PACKAGE_PIN AF4 [get_ports {PCI_EXP_RXP[1]}]
+set_property PACKAGE_PIN AF3 [get_ports {PCI_EXP_RXN[1]}]
+set_property PACKAGE_PIN AE6 [get_ports {PCI_EXP_TXP[1]}]
+set_property PACKAGE_PIN AE5 [get_ports {PCI_EXP_TXN[1]}]
+
+set_property PACKAGE_PIN AE2 [get_ports {PCI_EXP_RXP[0]}]
+set_property PACKAGE_PIN AE1 [get_ports {PCI_EXP_RXN[0]}]
+set_property PACKAGE_PIN AD4 [get_ports {PCI_EXP_TXP[0]}]
+set_property PACKAGE_PIN AD3 [get_ports {PCI_EXP_TXN[0]}]
+
+
+set_property PACKAGE_PIN AB7 [get_ports PCIE_REFCLK_N]
+set_property PACKAGE_PIN AB8 [get_ports PCIE_REFCLK_P]
 
 ###############################################################################
 # Timing Constraints
@@ -133,4 +148,3 @@ set_false_path -from [get_ports PCIE_RESET_N]
 ###############################################################################
 # End
 ###############################################################################
-
