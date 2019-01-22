@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2015 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="10" Path="/home/mark/git/riffa/fpga/xilinx/zcu106/ZCU106_Gen2x4If128/prj/ZCU106_Gen2x4If128.xpr">
+<Project Version="7" Minor="10" Path="/home/mark/git/riffa/fpga/xilinx/zcu106/ZCU106_Gen3x4If128/prj/ZCU106_Gen3x4If128.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="771e255770ec4edc86ac461b1b604342"/>
@@ -20,8 +20,8 @@
     <Option Name="DefaultLib" Val="xil_defaultlib"/>
     <Option Name="EnableCoreContainer" Val="FALSE"/>
     <Option Name="CreateRefXciForCoreContainers" Val="FALSE"/>
-    <Option Name="IPUserFilesDir" Val="$PPRDIR/ZCU106_Gen2x4If128.ip_user_files"/>
-    <Option Name="IPStaticSourceDir" Val="$PPRDIR/ZCU106_Gen2x4If128.ip_user_files/ipstatic"/>
+    <Option Name="IPUserFilesDir" Val="$PPRDIR/ZCU106_Gen3x4If128.ip_user_files"/>
+    <Option Name="IPStaticSourceDir" Val="$PPRDIR/ZCU106_Gen3x4If128.ip_user_files/ipstatic"/>
     <Option Name="EnableBDX" Val="FALSE"/>
   </Configuration>
   <FileSets Version="1" Minor="31">
@@ -704,7 +704,7 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PPRDIR/../hdl/ZCU106_Gen2x4If128.v">
+      <File Path="$PPRDIR/../hdl/ZCU106_Gen3x4If128.v">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -713,20 +713,20 @@
       </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="ZCU106_Gen2x4If128"/>
+        <Option Name="TopModule" Val="ZCU106_Gen3x4If128"/>
         <Option Name="TopAutoSet" Val="TRUE"/>
       </Config>
     </FileSet>
     <FileSet Name="constrs_1" Type="Constrs" RelSrcDir="$PSRCDIR/constrs_1">
       <Filter Type="Constrs"/>
-      <File Path="$PPRDIR/../constr/ZCU106_Gen2x4If128.xdc">
+      <File Path="$PPRDIR/../constr/ZCU106_Gen3x4If128.xdc">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
         </FileInfo>
       </File>
       <Config>
-        <Option Name="TargetConstrsFile" Val="$PPRDIR/../constr/ZCU106_Gen2x4If128.xdc"/>
+        <Option Name="TargetConstrsFile" Val="$PPRDIR/../constr/ZCU106_Gen3x4If128.xdc"/>
         <Option Name="ConstrsType" Val="XDC"/>
       </Config>
     </FileSet>
@@ -734,14 +734,14 @@
       <Filter Type="Srcs"/>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="ZCU106_Gen2x4If128"/>
+        <Option Name="TopModule" Val="ZCU106_Gen3x4If128"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
         <Option Name="TopAutoSet" Val="TRUE"/>
         <Option Name="SrcSet" Val="sources_1"/>
       </Config>
     </FileSet>
-    <FileSet Name="PCIeGen2x4If128" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PCIeGen2x4If128">
-      <File Path="$PPRDIR/../ip/PCIeGen2x4If128.xci">
+    <FileSet Name="PCIeGen3x4If128" Type="BlockSrcs" RelSrcDir="$PSRCDIR/PCIeGen3x4If128">
+      <File Path="$PPRDIR/../ip/PCIeGen3x4If128.xci">
         <FileInfo>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
@@ -749,7 +749,7 @@
         </FileInfo>
       </File>
       <Config>
-        <Option Name="TopModule" Val="PCIeGen2x4If128"/>
+        <Option Name="TopModule" Val="PCIeGen3x4If128"/>
         <Option Name="UseBlackboxStub" Val="1"/>
       </Config>
     </FileSet>
@@ -783,7 +783,7 @@
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
     </Run>
-    <Run Id="PCIeGen2x4If128_synth_1" Type="Ft3:Synth" SrcSet="PCIeGen2x4If128" Part="xczu7ev-ffvc1156-2-e" ConstrsSet="PCIeGen2x4If128" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/PCIeGen2x4If128_synth_1" IncludeInArchive="true">
+    <Run Id="PCIeGen3x4If128_synth_1" Type="Ft3:Synth" SrcSet="PCIeGen3x4If128" Part="xczu7ev-ffvc1156-2-e" ConstrsSet="PCIeGen3x4If128" Description="Vivado Synthesis Defaults" Dir="$PRUNDIR/PCIeGen3x4If128_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Synthesis Defaults" Flow="Vivado Synthesis 2015"/>
         <Step Id="synth_design"/>
@@ -805,7 +805,7 @@
       </Strategy>
       <GeneratedRun Dir="$PRUNDIR" File="gen_run.xml"/>
     </Run>
-    <Run Id="PCIeGen2x4If128_impl_1" Type="Ft2:EntireDesign" Part="xczu7ev-ffvc1156-2-e" ConstrsSet="PCIeGen2x4If128" Description="Vivado Implementation Defaults" SynthRun="PCIeGen2x4If128_synth_1" IncludeInArchive="true">
+    <Run Id="PCIeGen3x4If128_impl_1" Type="Ft2:EntireDesign" Part="xczu7ev-ffvc1156-2-e" ConstrsSet="PCIeGen3x4If128" Description="Vivado Implementation Defaults" SynthRun="PCIeGen3x4If128_synth_1" IncludeInArchive="true">
       <Strategy Version="1" Minor="2">
         <StratHandle Name="Vivado Implementation Defaults" Flow="Vivado Implementation 2015"/>
         <Step Id="init_design"/>

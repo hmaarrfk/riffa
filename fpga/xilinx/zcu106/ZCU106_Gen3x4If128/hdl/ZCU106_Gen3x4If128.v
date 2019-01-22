@@ -33,7 +33,7 @@
 // DAMAGE.
 // ----------------------------------------------------------------------
 //----------------------------------------------------------------------------
-// Filename:            ZCU106_Gen2x4If128.v
+// Filename:            ZCU106_Gen3x4If128.v
 // Version:             1.00.a
 // Verilog Standard:    Verilog-2001
 // Description:         Top level module for RIFFA 2.2 reference design for the
@@ -194,7 +194,7 @@ module ZCU106_Gen2x4If128
          .IB(PCIE_REFCLK_N));
 
     // Core Top Level Wrapper
-    PCIeGen2x4If128 PCIeGen2x4If128_i
+    PCIeGen3x4If128 PCIeGen3x4If128_i
         (//---------------------------------------------------------------------
          // PCI Express (pci_exp) Interface
          //---------------------------------------------------------------------
@@ -399,4 +399,3 @@ endmodule
 // Local Variables:
 // verilog-library-directories:("." "../../../engine/" "ultrascale/rx/" "ultrascale/tx/" "classic/rx/" "classic/tx/" "../../../riffa/" "../..")
 // End:
-
