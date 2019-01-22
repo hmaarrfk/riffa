@@ -26,3 +26,24 @@ fpga/xilinx/zc706/ZC706_Gen2x4If128/prj/ZC706_Gen2x4If128.cache/
 fpga/xilinx/zc706/ZC706_Gen2x4If128/prj/ZC706_Gen2x4If128.hw/
 fpga/xilinx/zc706/ZC706_Gen2x4If128/prj/ZC706_Gen2x4If128.ip_user_files/
 fpga/xilinx/zc706/ZC706_Gen2x4If128/prj/ZC706_Gen2x4If128.runs/
+
+
+# ZCU106 project files...
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128.dcp
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128.veo
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128.vho
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128.xml
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128_sim_netlist.v
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128_sim_netlist.vhdl
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128_stub.v
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128_stub.vhdl
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/source/
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128_board.xdc
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/ip_0/
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/synth/
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/sys_clk_gen_ps_v.txt
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/prj/ZCU106_Gen3x4If128.cache/
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/prj/ZCU106_Gen3x4If128.sim/
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/prj/ZCU106_Gen3x4If128.hw/
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/prj/ZCU106_Gen3x4If128.ip_user_files/
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/prj/ZCU106_Gen3x4If128.runs/
