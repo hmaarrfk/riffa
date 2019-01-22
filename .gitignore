@@ -38,6 +38,7 @@ fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128_sim_netlist.vhdl
 fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128_stub.v
 fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128_stub.vhdl
 fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/source/
+fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/sim/
 fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/PCIeGen3x4If128_board.xdc
 fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/ip_0/
 fpga/xilinx/zcu106/ZCU106_Gen3x4If128/ip/synth/
