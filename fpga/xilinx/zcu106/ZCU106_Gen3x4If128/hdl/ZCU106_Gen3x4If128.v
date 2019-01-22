@@ -92,22 +92,16 @@ module ZCU106_Gen2x4If128
     wire                               tx_cfg_gnt;
     wire                               rx_np_ok;
     wire                               rx_np_req;
-    wire                               cfg_turnoff_ok;
-    wire                               cfg_trn_pending;
-    wire                               cfg_pm_halt_aspm_l0s;
-    wire                               cfg_pm_halt_aspm_l1;
-    wire                               cfg_pm_force_state_en;
-    wire [1:0]                         cfg_pm_force_state;
     wire                               cfg_pm_wake;
     wire [63:0]                        cfg_dsn;
 
-    wire [11 : 0]                      fc_cpld;
-    wire [7 : 0]                       fc_cplh;
-    wire [11 : 0]                      fc_npd;
-    wire [7 : 0]                       fc_nph;
-    wire [11 : 0]                      fc_pd;
-    wire [7 : 0]                       fc_ph;
-    wire [2 : 0]                       fc_sel;
+    wire [11 : 0]                      cfg_fc_cpld;
+    wire [7 : 0]                       cfg_fc_cplh;
+    wire [11 : 0]                      cfg_fc_npd;
+    wire [7 : 0]                       cfg_fc_nph;
+    wire [11 : 0]                      cfg_fc_pd;
+    wire [7 : 0]                       cfg_fc_ph;
+    wire [2 : 0]                       cfg_fc_sel;
 
     wire [15 : 0]                      cfg_status;
     wire [15 : 0]                      cfg_command;
@@ -164,19 +158,11 @@ module ZCU106_Gen2x4If128
 
     genvar                                     chnl;
 
-    assign cfg_turnoff_ok = 0;
-    assign cfg_trn_pending = 0;
-    assign cfg_pm_halt_aspm_l0s = 0;
-    assign cfg_pm_halt_aspm_l1 = 0;
-    assign cfg_pm_force_state_en = 0;
-    assign cfg_pm_force_state = 0;
     assign cfg_dsn = 0;
     assign cfg_interrupt_assert = 0;
     assign cfg_interrupt_di = 0;
     assign cfg_interrupt_stat = 0;
     assign cfg_pciecap_interrupt_msgnum = 0;
-    assign cfg_turnoff_ok = 0;
-    assign cfg_pm_wake = 0;
 
     IBUF
         #()
@@ -210,53 +196,43 @@ module ZCU106_Gen2x4If128
          // AXI-S Interface
          //---------------------------------------------------------------------
          // Common
-         .user_clk_out                              ( user_clk ),
-         .user_reset_out                            ( user_reset ),
+         .user_clk                                  ( user_clk ),
+         .user_reset                                ( user_reset ),
          .user_lnk_up                               ( user_lnk_up ),
-         .user_app_rdy                              ( user_app_rdy ),
+         .phy_rdy_out                               ( user_app_rdy ),
 
          // TX
-         .s_axis_tx_tready                          ( s_axis_tx_tready ),
-         .s_axis_tx_tdata                           ( s_axis_tx_tdata ),
-         .s_axis_tx_tkeep                           ( s_axis_tx_tkeep ),
-         .s_axis_tx_tuser                           ( s_axis_tx_tuser ),
-         .s_axis_tx_tlast                           ( s_axis_tx_tlast ),
-         .s_axis_tx_tvalid                          ( s_axis_tx_tvalid ),
+         .s_axis_cc_tready                          ( s_axis_tx_tready ),
+         .s_axis_cc_tdata                           ( s_axis_tx_tdata ),
+         .s_axis_cc_tkeep                           ( s_axis_tx_tkeep ),
+         .s_axis_cc_tuser                           ( s_axis_tx_tuser ),
+         .s_axis_cc_tlast                           ( s_axis_tx_tlast ),
+         .s_axis_cc_tvalid                          ( s_axis_tx_tvalid ),
 
          // Rx
-         .m_axis_rx_tdata                           ( m_axis_rx_tdata ),
-         .m_axis_rx_tkeep                           ( m_axis_rx_tkeep ),
-         .m_axis_rx_tlast                           ( m_axis_rx_tlast ),
-         .m_axis_rx_tvalid                          ( m_axis_rx_tvalid ),
-         .m_axis_rx_tready                          ( m_axis_rx_tready ),
-         .m_axis_rx_tuser                           ( m_axis_rx_tuser ),
+         .m_axis_cq_tdata                           ( m_axis_rx_tdata ),
+         .m_axis_cq_tkeep                           ( m_axis_rx_tkeep ),
+         .m_axis_cq_tlast                           ( m_axis_rx_tlast ),
+         .m_axis_cq_tvalid                          ( m_axis_rx_tvalid ),
+         .m_axis_cq_tready                          ( m_axis_rx_tready ),
+         // Warning, there might actually be a difference in what this signal means
+         .m_axis_cq_tuser                           ( m_axis_rx_tuser ),
 
-         .tx_cfg_gnt                                ( tx_cfg_gnt ),
-         .rx_np_ok                                  ( rx_np_ok ),
-         .rx_np_req                                 ( rx_np_req ),
-         .cfg_trn_pending                           ( cfg_trn_pending ),
-         .cfg_pm_halt_aspm_l0s                      ( cfg_pm_halt_aspm_l0s ),
-         .cfg_pm_halt_aspm_l1                       ( cfg_pm_halt_aspm_l1 ),
-         .cfg_pm_force_state_en                     ( cfg_pm_force_state_en ),
-         .cfg_pm_force_state                        ( cfg_pm_force_state ),
+         .pcie_cq_np_req                            ( rx_np_req ),
          .cfg_dsn                                   ( cfg_dsn ),
-         .cfg_turnoff_ok                            ( cfg_turnoff_ok ),
-         .cfg_pm_wake                               ( cfg_pm_wake ),
-         .cfg_pm_send_pme_to                        ( 1'b0 ),
          .cfg_ds_bus_number                         ( 8'b0 ),
          .cfg_ds_device_number                      ( 5'b0 ),
-         .cfg_ds_function_number                    ( 3'b0 ),
 
          //---------------------------------------------------------------------
          // Flow Control Interface
          //---------------------------------------------------------------------
-         .fc_cpld                                   ( fc_cpld ),
-         .fc_cplh                                   ( fc_cplh ),
-         .fc_npd                                    ( fc_npd ),
-         .fc_nph                                    ( fc_nph ),
-         .fc_pd                                     ( fc_pd ),
-         .fc_ph                                     ( fc_ph ),
-         .fc_sel                                    ( fc_sel ),
+         .cfg_fc_cpld                               ( cfg_fc_cpld ),
+         .cfg_fc_cplh                               ( cfg_fc_cplh ),
+         .cfg_fc_npd                                ( cfg_fc_npd ),
+         .cfg_fc_nph                                ( cfg_fc_nph ),
+         .cfg_fc_pd                                 ( cfg_fc_pd ),
+         .cfg_fc_ph                                 ( cfg_fc_ph ),
+         .cfg_fc_sel                                ( cfg_fc_sel ),
 
          //---------------------------------------------------------------------
          // Configuration (CFG) Interface
@@ -318,7 +294,7 @@ module ZCU106_Gen2x4If128
          .S_AXIS_TX_TLAST               (s_axis_tx_tlast),
          .S_AXIS_TX_TVALID              (s_axis_tx_tvalid),
          .S_AXIS_TX_TUSER               (s_axis_tx_tuser[`SIG_XIL_TX_TUSER_W-1:0]),
-         .FC_SEL                        (fc_sel[`SIG_FC_SEL_W-1:0]),
+         .FC_SEL                        (cfg_fc_sel[`SIG_FC_SEL_W-1:0]),
          .RST_OUT                       (rst_out),
          .CHNL_RX                       (chnl_rx[C_NUM_CHNL-1:0]),
          .CHNL_RX_LAST                  (chnl_rx_last[C_NUM_CHNL-1:0]),
@@ -342,8 +318,8 @@ module ZCU106_Gen2x4If128
          .CFG_DCOMMAND                  (cfg_dcommand[`SIG_CFGREG_W-1:0]),
          .CFG_LSTATUS                   (cfg_lstatus[`SIG_CFGREG_W-1:0]),
          .CFG_LCOMMAND                  (cfg_lcommand[`SIG_CFGREG_W-1:0]),
-         .FC_CPLD                       (fc_cpld[`SIG_FC_CPLD_W-1:0]),
-         .FC_CPLH                       (fc_cplh[`SIG_FC_CPLH_W-1:0]),
+         .FC_CPLD                       (cfg_fc_cpld[`SIG_FC_CPLD_W-1:0]),
+         .FC_CPLH                       (cfg_fc_cplh[`SIG_FC_CPLH_W-1:0]),
          .CFG_INTERRUPT_MSIEN           (cfg_interrupt_msien),
          .CFG_INTERRUPT_RDY             (cfg_interrupt_rdy),
          .USER_CLK                      (user_clk),
