@@ -33,15 +33,14 @@
 // DAMAGE.
 // ----------------------------------------------------------------------
 //----------------------------------------------------------------------------
-// Filename:            riffa_wrapper_vc707.v
+// Filename:            riffa_wrapper_vc709.v
 // Version:             1.00.a
 // Verilog Standard:    Verilog-2001
-// Description:         RIFFA wrapper for the VC707 Development board.
+// Description:         RIFFA wrapper for the VC709 Development board.
 // Author:              Dustin Richmond (@darichmond)
 //-----------------------------------------------------------------------------
 `include "trellis.vh"
 `include "riffa.vh"
-`include "xilinx.vh"
 `include "ultrascale.vh"
 `include "functions.vh"
 `timescale 1ps / 1ps
@@ -53,47 +52,71 @@ module riffa_wrapper_zcu106
       // 4-Byte Name for this FPGA
       parameter C_MAX_PAYLOAD_BYTES = 256,
       parameter C_LOG_NUM_TAGS = 5,
-      parameter C_FPGA_ID = "Z106")
-    (// Interface: Xilinx RX
-     input [C_PCI_DATA_WIDTH-1:0]                 M_AXIS_RX_TDATA,
-     input [(C_PCI_DATA_WIDTH/8)-1:0]             M_AXIS_RX_TKEEP,
-     input                                        M_AXIS_RX_TLAST,
-     input                                        M_AXIS_RX_TVALID,
-     output                                       M_AXIS_RX_TREADY,
-     input [`SIG_XIL_RX_TUSER_W-1:0]              M_AXIS_RX_TUSER,
-     output                                       RX_NP_OK,
-     output                                       RX_NP_REQ,
+      parameter C_FPGA_ID = "V709")
+    (//Interface: CQ Ultrascale (RXR)
+     input                                        M_AXIS_CQ_TVALID,
+     input                                        M_AXIS_CQ_TLAST,
+     input [C_PCI_DATA_WIDTH-1:0]                 M_AXIS_CQ_TDATA,
+     input [(C_PCI_DATA_WIDTH/32)-1:0]            M_AXIS_CQ_TKEEP,
+     input [`SIG_CQ_TUSER_W-1:0]                  M_AXIS_CQ_TUSER,
+     output                                       M_AXIS_CQ_TREADY,
 
-     // Interface: Xilinx TX
-     output [C_PCI_DATA_WIDTH-1:0]                S_AXIS_TX_TDATA,
-     output [(C_PCI_DATA_WIDTH/8)-1:0]            S_AXIS_TX_TKEEP,
-     output                                       S_AXIS_TX_TLAST,
-     output                                       S_AXIS_TX_TVALID,
-     input                                        S_AXIS_TX_TREADY,
-     output [`SIG_XIL_TX_TUSER_W-1:0]             S_AXIS_TX_TUSER,
-     output                                       TX_CFG_GNT,
+     //Interface: RC Ultrascale (RXC)
+     input                                        M_AXIS_RC_TVALID,
+     input                                        M_AXIS_RC_TLAST,
+     input [C_PCI_DATA_WIDTH-1:0]                 M_AXIS_RC_TDATA,
+     input [(C_PCI_DATA_WIDTH/32)-1:0]            M_AXIS_RC_TKEEP,
+     input [`SIG_RC_TUSER_W-1:0]                  M_AXIS_RC_TUSER,
+     output                                       M_AXIS_RC_TREADY,
 
-     // Interface: Xilinx Configuration
-     input [`SIG_BUSID_W-1:0]                     CFG_BUS_NUMBER,
-     input [`SIG_DEVID_W-1:0]                     CFG_DEVICE_NUMBER,
-     input [`SIG_FNID_W-1:0]                      CFG_FUNCTION_NUMBER,
-     input [`SIG_CFGREG_W-1:0]                    CFG_COMMAND,
-     input [`SIG_CFGREG_W-1:0]                    CFG_DCOMMAND,
-     input [`SIG_CFGREG_W-1:0]                    CFG_LSTATUS,
-     input [`SIG_CFGREG_W-1:0]                    CFG_LCOMMAND,
+     //Interface: CC Ultrascale (TXC)
+     input                                        S_AXIS_CC_TREADY,
+     output                                       S_AXIS_CC_TVALID,
+     output                                       S_AXIS_CC_TLAST,
+     output [C_PCI_DATA_WIDTH-1:0]                S_AXIS_CC_TDATA,
+     output [(C_PCI_DATA_WIDTH/32)-1:0]           S_AXIS_CC_TKEEP,
+     output [`SIG_CC_TUSER_W-1:0]                 S_AXIS_CC_TUSER,
 
-     // Interface: Xilinx Flow Control
-     input [`SIG_FC_CPLD_W-1:0]                   FC_CPLD,
-     input [`SIG_FC_CPLH_W-1:0]                   FC_CPLH,
-     output [`SIG_FC_SEL_W-1:0]                   FC_SEL,
-
-     // Interface: Xilinx Interrupt
-     input                                        CFG_INTERRUPT_MSIEN,
-     input                                        CFG_INTERRUPT_RDY,
-     output                                       CFG_INTERRUPT,
+     //Interface: RQ Ultrascale (TXR)
+     input                                        S_AXIS_RQ_TREADY,
+     output                                       S_AXIS_RQ_TVALID,
+     output                                       S_AXIS_RQ_TLAST,
+     output [C_PCI_DATA_WIDTH-1:0]                S_AXIS_RQ_TDATA,
+     output [(C_PCI_DATA_WIDTH/32)-1:0]           S_AXIS_RQ_TKEEP,
+     output [`SIG_RQ_TUSER_W-1:0]                 S_AXIS_RQ_TUSER,
 
      input                                        USER_CLK,
      input                                        USER_RESET,
+
+     output [3:0]                                 CFG_INTERRUPT_INT,
+     output [1:0]                                 CFG_INTERRUPT_PENDING,
+     input [1:0]                                  CFG_INTERRUPT_MSI_ENABLE,
+     input                                        CFG_INTERRUPT_MSI_MASK_UPDATE,
+     input [31:0]                                 CFG_INTERRUPT_MSI_DATA,
+     output [3:0]                                 CFG_INTERRUPT_MSI_SELECT,
+     output [31:0]                                CFG_INTERRUPT_MSI_INT,
+     output                                       CFG_INTERRUPT_MSI_PENDING_STATUS_DATA_ENABLE,
+     output [63:0]                                CFG_INTERRUPT_MSI_PENDING_STATUS,
+     input                                        CFG_INTERRUPT_MSI_SENT,
+     input                                        CFG_INTERRUPT_MSI_FAIL,
+     output [2:0]                                 CFG_INTERRUPT_MSI_ATTR,
+     output                                       CFG_INTERRUPT_MSI_TPH_PRESENT,
+     output [1:0]                                 CFG_INTERRUPT_MSI_TPH_TYPE,
+     output [8:0]                                 CFG_INTERRUPT_MSI_TPH_ST_TAG,
+     output [2:0]                                 CFG_INTERRUPT_MSI_FUNCTION_NUMBER,
+
+     input [7:0]                                  CFG_FC_CPLH,
+     input [11:0]                                 CFG_FC_CPLD,
+     output [2:0]                                 CFG_FC_SEL,
+
+     input [3:0]                                  CFG_NEGOTIATED_WIDTH, // CONFIG_LINK_WIDTH
+     input [2:0]                                  CFG_CURRENT_SPEED, // CONFIG_LINK_RATE
+     input [2:0]                                  CFG_MAX_PAYLOAD, // CONFIG_MAX_PAYLOAD
+     input [2:0]                                  CFG_MAX_READ_REQ, // CONFIG_MAX_READ_REQUEST
+     input [7:0]                                  CFG_FUNCTION_STATUS, // [2] = CONFIG_BUS_MASTER_ENABLE
+     input [1:0]                                  CFG_RCB_STATUS,
+
+     output                                       PCIE_CQ_NP_REQ,
 
      // RIFFA Interface Signals
      output                                       RST_OUT,
@@ -120,7 +143,7 @@ module riffa_wrapper_zcu106
     localparam C_FPGA_NAME = "REGT"; // This is not yet exposed in the driver
     localparam C_MAX_READ_REQ_BYTES = C_MAX_PAYLOAD_BYTES * 2;
     // ALTERA, XILINX or ULTRASCALE
-    localparam C_VENDOR = "XILINX";
+    localparam C_VENDOR = "ULTRASCALE";
 
     localparam C_KEEP_WIDTH = C_PCI_DATA_WIDTH / 32;
     localparam C_PIPELINE_OUTPUT = 1;
@@ -140,10 +163,10 @@ module riffa_wrapper_zcu106
     wire                                          rxc_data_valid;
     wire                                          rxc_data_start_flag;
     wire [(C_PCI_DATA_WIDTH/32)-1:0]              rxc_data_word_enable;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       rxc_data_start_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        rxc_data_start_offset;
     wire [`SIG_FBE_W-1:0]                         rxc_meta_fdwbe;
     wire                                          rxc_data_end_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       rxc_data_end_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        rxc_data_end_offset;
     wire [`SIG_LBE_W-1:0]                         rxc_meta_ldwbe;
     wire [`SIG_TAG_W-1:0]                         rxc_meta_tag;
     wire [`SIG_LOWADDR_W-1:0]                     rxc_meta_addr;
@@ -158,10 +181,10 @@ module riffa_wrapper_zcu106
     wire                                          rxr_data_valid;
     wire [(C_PCI_DATA_WIDTH/32)-1:0]              rxr_data_word_enable;
     wire                                          rxr_data_start_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       rxr_data_start_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        rxr_data_start_offset;
     wire [`SIG_FBE_W-1:0]                         rxr_meta_fdwbe;
     wire                                          rxr_data_end_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       rxr_data_end_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        rxr_data_end_offset;
     wire [`SIG_LBE_W-1:0]                         rxr_meta_ldwbe;
     wire [`SIG_TC_W-1:0]                          rxr_meta_tc;
     wire [`SIG_ATTR_W-1:0]                        rxr_meta_attr;
@@ -177,9 +200,9 @@ module riffa_wrapper_zcu106
     wire                                          txc_data_valid;
     wire [C_PCI_DATA_WIDTH-1:0]                   txc_data;
     wire                                          txc_data_start_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       txc_data_start_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        txc_data_start_offset;
     wire                                          txc_data_end_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       txc_data_end_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        txc_data_end_offset;
     wire                                          txc_data_ready;
 
     wire                                          txc_meta_valid;
@@ -201,9 +224,9 @@ module riffa_wrapper_zcu106
     wire                                          txr_data_valid;
     wire [C_PCI_DATA_WIDTH-1:0]                   txr_data;
     wire                                          txr_data_start_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       txr_data_start_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        txr_data_start_offset;
     wire                                          txr_data_end_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       txr_data_end_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        txr_data_end_offset;
     wire                                          txr_data_ready;
 
     wire                                          txr_meta_valid;
@@ -219,53 +242,25 @@ module riffa_wrapper_zcu106
     wire                                          txr_meta_ready;
     wire                                          txr_sent;
 
-    // Classic Interface Wires
-    wire                                          rx_tlp_ready;
-    wire [C_PCI_DATA_WIDTH-1:0]                   rx_tlp;
-    wire                                          rx_tlp_end_flag;
-    wire [`SIG_OFFSET_W-1:0]                      rx_tlp_end_offset;
-    wire                                          rx_tlp_start_flag;
-    wire [`SIG_OFFSET_W-1:0]                      rx_tlp_start_offset;
-    wire                                          rx_tlp_valid;
-    wire [`SIG_BARDECODE_W-1:0]                   rx_tlp_bar_decode;
+    // Unconnected Wires (Used in classic interface)
+    wire                                          wRxTlpReady_nc;
+    wire [C_PCI_DATA_WIDTH-1:0]                   wRxTlp_nc = 0;
+    wire                                          wRxTlpEndFlag_nc = 0;
+    wire [`SIG_OFFSET_W-1:0]                      wRxTlpEndOffset_nc = 0;
+    wire                                          wRxTlpStartFlag_nc = 0;
+    wire [`SIG_OFFSET_W-1:0]                      wRxTlpStartOffset_nc = 0;
+    wire                                          wRxTlpValid_nc = 0;
+    wire [`SIG_BARDECODE_W-1:0]                   wRxTlpBarDecode_nc = 0;
 
-    wire                                          tx_tlp_ready;
-    wire [C_PCI_DATA_WIDTH-1:0]                   tx_tlp;
-    wire                                          tx_tlp_end_flag;
-    wire [`SIG_OFFSET_W-1:0]                      tx_tlp_end_offset;
-    wire                                          tx_tlp_start_flag;
-    wire [`SIG_OFFSET_W-1:0]                      tx_tlp_start_offset;
-    wire                                          tx_tlp_valid;
+    wire                                          wTxTlpReady_nc = 0;
+    wire [C_PCI_DATA_WIDTH-1:0]                   wTxTlp_nc;
+    wire                                          wTxTlpEndFlag_nc;
+    wire [`SIG_OFFSET_W-1:0]                      wTxTlpEndOffset_nc;
+    wire                                          wTxTlpStartFlag_nc;
+    wire [`SIG_OFFSET_W-1:0]                      wTxTlpStartOffset_nc;
+    wire                                          wTxTlpValid_nc;
 
-    // Unconnected Wires (Used in ultrascale interface)
-    // Interface: RQ (TXC)
-    wire                                          s_axis_rq_tlast_nc;
-    wire [C_PCI_DATA_WIDTH-1:0]                   s_axis_rq_tdata_nc;
-    wire [`SIG_RQ_TUSER_W-1:0]                    s_axis_rq_tuser_nc;
-    wire [(C_PCI_DATA_WIDTH/32)-1:0]              s_axis_rq_tkeep_nc;
-    wire                                          s_axis_rq_tready_nc = 0;
-    wire                                          s_axis_rq_tvalid_nc;
-    // Interface: RC (RXC)
-    wire [C_PCI_DATA_WIDTH-1:0]                   m_axis_rc_tdata_nc = 0;
-    wire [`SIG_RC_TUSER_W-1:0]                    m_axis_rc_tuser_nc = 0;
-    wire                                          m_axis_rc_tlast_nc = 0;
-    wire [(C_PCI_DATA_WIDTH/32)-1:0]              m_axis_rc_tkeep_nc = 0;
-    wire                                          m_axis_rc_tvalid_nc = 0;
-    wire                                          m_axis_rc_tready_nc;
-    // Interface: CQ (RXR)
-    wire [C_PCI_DATA_WIDTH-1:0]                   m_axis_cq_tdata_nc = 0;
-    wire [`SIG_CQ_TUSER_W-1:0]                    m_axis_cq_tuser_nc = 0;
-    wire                                          m_axis_cq_tlast_nc = 0;
-    wire [(C_PCI_DATA_WIDTH/32)-1:0]              m_axis_cq_tkeep_nc = 0;
-    wire                                          m_axis_cq_tvalid_nc = 0;
-    wire                                          m_axis_cq_tready_nc = 0;
-    // Interface: CC (TXC)
-    wire [C_PCI_DATA_WIDTH-1:0]                   s_axis_cc_tdata_nc;
-    wire [`SIG_CC_TUSER_W-1:0]                    s_axis_cc_tuser_nc;
-    wire                                          s_axis_cc_tlast_nc;
-    wire [(C_PCI_DATA_WIDTH/32)-1:0]              s_axis_cc_tkeep_nc;
-    wire                                          s_axis_cc_tvalid_nc;
-    wire                                          s_axis_cc_tready_nc = 0;
+    //--------------------------------------------------------------------------
 
     // Interface: Configuration
     wire                                          config_bus_master_enable;
@@ -284,79 +279,37 @@ module riffa_wrapper_zcu106
 
     genvar                                        chnl;
 
-    reg                                           rRxTlpValid;
-    reg                                           rRxTlpEndFlag;
-
     assign clk = USER_CLK;
     assign rst_in = USER_RESET;
 
-    translation_xilinx
-        #(/*AUTOINSTPARAM*/
-          // Parameters
-          .C_PCI_DATA_WIDTH             (C_PCI_DATA_WIDTH))
-    trans
-        (// Outputs
-         .RX_TLP                        (rx_tlp[C_PCI_DATA_WIDTH-1:0]),
-         .RX_TLP_VALID                  (rx_tlp_valid),
-         .RX_TLP_START_FLAG             (rx_tlp_start_flag),
-         .RX_TLP_START_OFFSET           (rx_tlp_start_offset[`clog2s(C_PCI_DATA_WIDTH/32)-1:0]),
-         .RX_TLP_END_FLAG               (rx_tlp_end_flag),
-         .RX_TLP_END_OFFSET             (rx_tlp_end_offset[`clog2s(C_PCI_DATA_WIDTH/32)-1:0]),
-         .RX_TLP_BAR_DECODE             (rx_tlp_bar_decode[`SIG_BARDECODE_W-1:0]),
-         .TX_TLP_READY                  (tx_tlp_ready),
-         .CONFIG_COMPLETER_ID           (config_completer_id[`SIG_CPLID_W-1:0]),
-         .CONFIG_BUS_MASTER_ENABLE      (config_bus_master_enable),
-         .CONFIG_LINK_WIDTH             (config_link_width[`SIG_LINKWIDTH_W-1:0]),
-         .CONFIG_LINK_RATE              (config_link_rate[`SIG_LINKRATE_W-1:0]),
-         .CONFIG_MAX_READ_REQUEST_SIZE  (config_max_read_request_size[`SIG_MAXREAD_W-1:0]),
-         .CONFIG_MAX_PAYLOAD_SIZE       (config_max_payload_size[`SIG_MAXPAYLOAD_W-1:0]),
-         .CONFIG_INTERRUPT_MSIENABLE    (config_interrupt_msienable),
-         .CONFIG_CPL_BOUNDARY_SEL       (config_cpl_boundary_sel),
-         .CONFIG_MAX_CPL_DATA           (config_max_cpl_data[`SIG_FC_CPLD_W-1:0]),
-         .CONFIG_MAX_CPL_HDR            (config_max_cpl_hdr[`SIG_FC_CPLH_W-1:0]),
-         .INTR_MSI_RDY                  (intr_msi_rdy),
-         // Inputs
-         .CLK                           (clk),
-         .RST_IN                        (rst_in),
-         .RX_TLP_READY                  (rx_tlp_ready),
-         .TX_TLP                        (tx_tlp[C_PCI_DATA_WIDTH-1:0]),
-         .TX_TLP_VALID                  (tx_tlp_valid),
-         .TX_TLP_START_FLAG             (tx_tlp_start_flag),
-         .TX_TLP_START_OFFSET           (tx_tlp_start_offset[`clog2s(C_PCI_DATA_WIDTH/32)-1:0]),
-         .TX_TLP_END_FLAG               (tx_tlp_end_flag),
-         .TX_TLP_END_OFFSET             (tx_tlp_end_offset[`clog2s(C_PCI_DATA_WIDTH/32)-1:0]),
-         .INTR_MSI_REQUEST              (intr_msi_request),
-         /*AUTOINST*/
-         // Outputs
-         .M_AXIS_RX_TREADY              (M_AXIS_RX_TREADY),
-         .RX_NP_OK                      (RX_NP_OK),
-         .RX_NP_REQ                     (RX_NP_REQ),
-         .S_AXIS_TX_TDATA               (S_AXIS_TX_TDATA[C_PCI_DATA_WIDTH-1:0]),
-         .S_AXIS_TX_TKEEP               (S_AXIS_TX_TKEEP[(C_PCI_DATA_WIDTH/8)-1:0]),
-         .S_AXIS_TX_TLAST               (S_AXIS_TX_TLAST),
-         .S_AXIS_TX_TVALID              (S_AXIS_TX_TVALID),
-         .S_AXIS_TX_TUSER               (S_AXIS_TX_TUSER[`SIG_XIL_TX_TUSER_W-1:0]),
-         .TX_CFG_GNT                    (TX_CFG_GNT),
-         .FC_SEL                        (FC_SEL[`SIG_FC_SEL_W-1:0]),
-         .CFG_INTERRUPT                 (CFG_INTERRUPT),
-         // Inputs
-         .M_AXIS_RX_TDATA               (M_AXIS_RX_TDATA[C_PCI_DATA_WIDTH-1:0]),
-         .M_AXIS_RX_TKEEP               (M_AXIS_RX_TKEEP[(C_PCI_DATA_WIDTH/8)-1:0]),
-         .M_AXIS_RX_TLAST               (M_AXIS_RX_TLAST),
-         .M_AXIS_RX_TVALID              (M_AXIS_RX_TVALID),
-         .M_AXIS_RX_TUSER               (M_AXIS_RX_TUSER[`SIG_XIL_RX_TUSER_W-1:0]),
-         .S_AXIS_TX_TREADY              (S_AXIS_TX_TREADY),
-         .CFG_BUS_NUMBER                (CFG_BUS_NUMBER[`SIG_BUSID_W-1:0]),
-         .CFG_DEVICE_NUMBER             (CFG_DEVICE_NUMBER[`SIG_DEVID_W-1:0]),
-         .CFG_FUNCTION_NUMBER           (CFG_FUNCTION_NUMBER[`SIG_FNID_W-1:0]),
-         .CFG_COMMAND                   (CFG_COMMAND[`SIG_CFGREG_W-1:0]),
-         .CFG_DCOMMAND                  (CFG_DCOMMAND[`SIG_CFGREG_W-1:0]),
-         .CFG_LSTATUS                   (CFG_LSTATUS[`SIG_CFGREG_W-1:0]),
-         .CFG_LCOMMAND                  (CFG_LCOMMAND[`SIG_CFGREG_W-1:0]),
-         .FC_CPLD                       (FC_CPLD[`SIG_FC_CPLD_W-1:0]),
-         .FC_CPLH                       (FC_CPLH[`SIG_FC_CPLH_W-1:0]),
-         .CFG_INTERRUPT_MSIEN           (CFG_INTERRUPT_MSIEN),
-         .CFG_INTERRUPT_RDY             (CFG_INTERRUPT_RDY));
+    assign config_completer_id = 0; // Not used in ULTRASCALE implementation
+    assign config_bus_master_enable = CFG_FUNCTION_STATUS[2];
+    assign config_link_width = {2'b00,CFG_NEGOTIATED_WIDTH}; // CONFIG_LINK_WIDTH
+    assign config_link_rate = CFG_CURRENT_SPEED[2]? 2'b11 : CFG_CURRENT_SPEED[2] ? 2'b10 : 2'b01;
+    assign config_max_payload_size = CFG_MAX_PAYLOAD; // CONFIG_MAX_PAYLOAD
+    assign config_max_read_request_size = CFG_MAX_READ_REQ; // CONFIG_MAX_READ_REQUEST
+    assign config_cpl_boundary_sel =  CFG_RCB_STATUS[0];
+    assign config_interrupt_msienable = CFG_INTERRUPT_MSI_ENABLE[0];
+    assign config_max_cpl_data = CFG_FC_CPLD;
+    assign config_max_cpl_hdr = CFG_FC_CPLH;
+
+    assign CFG_FC_SEL = 3'b001; // Always display credit maximum for the signals below
+    assign CFG_INTERRUPT_MSI_INT = {31'b0,intr_msi_request};
+    assign CFG_INTERRUPT_MSI_SELECT = 0;
+    assign CFG_INTERRUPT_INT = 0;
+    assign CFG_INTERRUPT_PENDING = 0;
+    assign CFG_INTERRUPT_MSI_SELECT = 0;
+    assign CFG_INTERRUPT_MSI_PENDING_STATUS_DATA_ENABLE = intr_msi_request;
+    assign CFG_INTERRUPT_MSI_PENDING_STATUS = {63'b0,intr_msi_request};
+    assign CFG_INTERRUPT_MSI_ATTR = 0;
+    assign CFG_INTERRUPT_MSI_TPH_PRESENT = 0;
+    assign CFG_INTERRUPT_MSI_TPH_ST_TAG = 0;
+    assign CFG_INTERRUPT_MSI_TPH_TYPE = 0;
+    assign CFG_INTERRUPT_MSI_FUNCTION_NUMBER = 0;
+
+    assign intr_msi_rdy = CFG_INTERRUPT_MSI_SENT & ~CFG_INTERRUPT_MSI_FAIL;
+
+    assign PCIE_CQ_NP_REQ = 1;
 
     engine_layer
         #(// Parameters
@@ -415,14 +368,14 @@ module riffa_wrapper_zcu106
          .TXR_SENT                      (txr_sent),
          .RST_LOGIC                     (RST_OUT),
          // Unconnected Outputs
-         .TX_TLP                        (tx_tlp),
-         .TX_TLP_VALID                  (tx_tlp_valid),
-         .TX_TLP_START_FLAG             (tx_tlp_start_flag),
-         .TX_TLP_START_OFFSET           (tx_tlp_start_offset),
-         .TX_TLP_END_FLAG               (tx_tlp_end_flag),
-         .TX_TLP_END_OFFSET             (tx_tlp_end_offset),
+         .TX_TLP                        (wTxTlp_nc),
+         .TX_TLP_VALID                  (wTxTlpValid_nc),
+         .TX_TLP_START_FLAG             (wTxTlpStartFlag_nc),
+         .TX_TLP_START_OFFSET           (wTxTlpStartOffset_nc),
+         .TX_TLP_END_FLAG               (wTxTlpEndFlag_nc),
+         .TX_TLP_END_OFFSET             (wTxTlpEndOffset_nc),
 
-         .RX_TLP_READY                  (rx_tlp_ready),
+         .RX_TLP_READY                  (wRxTlpReady_nc),
          // Inputs
          .CLK_BUS                       (clk),
          .RST_BUS                       (rst_in),
@@ -465,46 +418,46 @@ module riffa_wrapper_zcu106
          .TXR_META_TYPE                 (txr_meta_type[`SIG_TYPE_W-1:0]),
          .TXR_META_EP                   (txr_meta_ep),
          // Unconnected Inputs
-         .RX_TLP                        (rx_tlp),
-         .RX_TLP_VALID                  (rx_tlp_valid),
-         .RX_TLP_START_FLAG             (rx_tlp_start_flag),
-         .RX_TLP_START_OFFSET           (rx_tlp_start_offset),
-         .RX_TLP_END_FLAG               (rx_tlp_end_flag),
-         .RX_TLP_END_OFFSET             (rx_tlp_end_offset),
-         .RX_TLP_BAR_DECODE             (rx_tlp_bar_decode),
+         .RX_TLP                        (wRxTlp_nc),
+         .RX_TLP_VALID                  (wRxTlpValid_nc),
+         .RX_TLP_START_FLAG             (wRxTlpStartFlag_nc),
+         .RX_TLP_START_OFFSET           (wRxTlpStartOffset_nc),
+         .RX_TLP_END_FLAG               (wRxTlpEndFlag_nc),
+         .RX_TLP_END_OFFSET             (wRxTlpEndOffset_nc),
+         .RX_TLP_BAR_DECODE             (wRxTlpBarDecode_nc),
 
-         .TX_TLP_READY                  (tx_tlp_ready),
+         .TX_TLP_READY                  (wTxTlpReady_nc),
          .DONE_TXC_RST                  (done_txc_rst),
          .DONE_TXR_RST                  (done_txr_rst),
          .DONE_RXR_RST                  (done_rxc_rst),
-         .DONE_RXC_RST                  (done_rxr_rst),
+         .DONE_RXC_RST                  (done_rxr_rstsudo),
+         /*AUTOINST*/
          // Outputs
-         .M_AXIS_CQ_TREADY              (m_axis_cq_tready_nc),
-         .M_AXIS_RC_TREADY              (m_axis_rc_tready_nc),
-         .S_AXIS_CC_TVALID              (s_axis_cc_tvalid_nc),
-         .S_AXIS_CC_TLAST               (s_axis_cc_tlast_nc),
-         .S_AXIS_CC_TDATA               (s_axis_cc_tdata_nc[C_PCI_DATA_WIDTH-1:0]),
-         .S_AXIS_CC_TKEEP               (s_axis_cc_tkeep_nc[(C_PCI_DATA_WIDTH/32)-1:0]),
-         .S_AXIS_CC_TUSER               (s_axis_cc_tuser_nc[`SIG_CC_TUSER_W-1:0]),
-         .S_AXIS_RQ_TVALID              (s_axis_rq_tvalid_nc),
-         .S_AXIS_RQ_TLAST               (s_axis_rq_tlast_nc),
-         .S_AXIS_RQ_TDATA               (s_axis_rq_tdata_nc[C_PCI_DATA_WIDTH-1:0]),
-         .S_AXIS_RQ_TKEEP               (s_axis_rq_tkeep_nc[(C_PCI_DATA_WIDTH/32)-1:0]),
-         .S_AXIS_RQ_TUSER               (s_axis_rq_tuser_nc[`SIG_RQ_TUSER_W-1:0]),
+         .M_AXIS_CQ_TREADY              (M_AXIS_CQ_TREADY),
+         .M_AXIS_RC_TREADY              (M_AXIS_RC_TREADY),
+         .S_AXIS_CC_TVALID              (S_AXIS_CC_TVALID),
+         .S_AXIS_CC_TLAST               (S_AXIS_CC_TLAST),
+         .S_AXIS_CC_TDATA               (S_AXIS_CC_TDATA[C_PCI_DATA_WIDTH-1:0]),
+         .S_AXIS_CC_TKEEP               (S_AXIS_CC_TKEEP[(C_PCI_DATA_WIDTH/32)-1:0]),
+         .S_AXIS_CC_TUSER               (S_AXIS_CC_TUSER[`SIG_CC_TUSER_W-1:0]),
+         .S_AXIS_RQ_TVALID              (S_AXIS_RQ_TVALID),
+         .S_AXIS_RQ_TLAST               (S_AXIS_RQ_TLAST),
+         .S_AXIS_RQ_TDATA               (S_AXIS_RQ_TDATA[C_PCI_DATA_WIDTH-1:0]),
+         .S_AXIS_RQ_TKEEP               (S_AXIS_RQ_TKEEP[(C_PCI_DATA_WIDTH/32)-1:0]),
+         .S_AXIS_RQ_TUSER               (S_AXIS_RQ_TUSER[`SIG_RQ_TUSER_W-1:0]),
          // Inputs
-         .M_AXIS_CQ_TVALID              (m_axis_cq_tvalid_nc),
-         .M_AXIS_CQ_TLAST               (m_axis_cq_tlast_nc),
-         .M_AXIS_CQ_TDATA               (m_axis_cq_tdata_nc[C_PCI_DATA_WIDTH-1:0]),
-         .M_AXIS_CQ_TKEEP               (m_axis_cq_tkeep_nc[(C_PCI_DATA_WIDTH/32)-1:0]),
-         .M_AXIS_CQ_TUSER               (m_axis_cq_tuser_nc[`SIG_CQ_TUSER_W-1:0]),
-         .M_AXIS_RC_TVALID              (m_axis_rc_tvalid_nc),
-         .M_AXIS_RC_TLAST               (m_axis_rc_tlast_nc),
-         .M_AXIS_RC_TDATA               (m_axis_rc_tdata_nc[C_PCI_DATA_WIDTH-1:0]),
-         .M_AXIS_RC_TKEEP               (m_axis_rc_tkeep_nc[(C_PCI_DATA_WIDTH/32)-1:0]),
-         .M_AXIS_RC_TUSER               (m_axis_rc_tuser_nc[`SIG_RC_TUSER_W-1:0]),
-         .S_AXIS_CC_TREADY              (s_axis_cc_tready_nc),
-         .S_AXIS_RQ_TREADY              (s_axis_rq_tready_nc)
-         /*AUTOINST*/);
+         .M_AXIS_CQ_TVALID              (M_AXIS_CQ_TVALID),
+         .M_AXIS_CQ_TLAST               (M_AXIS_CQ_TLAST),
+         .M_AXIS_CQ_TDATA               (M_AXIS_CQ_TDATA[C_PCI_DATA_WIDTH-1:0]),
+         .M_AXIS_CQ_TKEEP               (M_AXIS_CQ_TKEEP[(C_PCI_DATA_WIDTH/32)-1:0]),
+         .M_AXIS_CQ_TUSER               (M_AXIS_CQ_TUSER[`SIG_CQ_TUSER_W-1:0]),
+         .M_AXIS_RC_TVALID              (M_AXIS_RC_TVALID),
+         .M_AXIS_RC_TLAST               (M_AXIS_RC_TLAST),
+         .M_AXIS_RC_TDATA               (M_AXIS_RC_TDATA[C_PCI_DATA_WIDTH-1:0]),
+         .M_AXIS_RC_TKEEP               (M_AXIS_RC_TKEEP[(C_PCI_DATA_WIDTH/32)-1:0]),
+         .M_AXIS_RC_TUSER               (M_AXIS_RC_TUSER[`SIG_RC_TUSER_W-1:0]),
+         .S_AXIS_CC_TREADY              (S_AXIS_CC_TREADY),
+         .S_AXIS_RQ_TREADY              (S_AXIS_RQ_TREADY));
 
     riffa
         #(.C_TAG_WIDTH                  (C_LOG_NUM_TAGS),/* TODO: Standardize declaration*/
