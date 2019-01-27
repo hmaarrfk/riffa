@@ -60,8 +60,8 @@ module ZCU106_Gen3x4If128
      input [(C_NUM_LANES - 1) : 0]  PCI_EXP_RXN,
 
      output [7:0]                   LED,
-     input                          PCIE_REFCLK_P,
-     input                          PCIE_REFCLK_N,
+     input                          sys_clk_p,
+     input                          sys_clk_n,
      input                          PCIE_RESET_N
      );
 
@@ -69,8 +69,8 @@ module ZCU106_Gen3x4If128
     wire                            user_lnk_up;
     wire                            user_clk;
     wire                            user_reset;
-    wire                            pcie_refclk;
-    wire                            pcie_refclk_gt;
+    wire                            sys_clk;
+    wire                            sys_clk_gt;
     wire                            pcie_reset_n;
 
     // Interface: RQ (TXC)
@@ -195,11 +195,11 @@ module ZCU106_Gen3x4If128
     IBUFDS_GTE4
         #()
     refclk_ibuf
-        (.O(pcie_refclk_gt),
-         .ODIV2(pcie_refclk),
-         .I(PCIE_REFCLK_P),
+        (.O(sys_clk_gt),
+         .ODIV2(sys_clk),
+         .I(sys_clk_p),
          .CEB(1'b0),
-         .IB(PCIE_REFCLK_N));
+         .IB(sys_clk_n));
 
     OBUF
         #()
@@ -355,8 +355,8 @@ module ZCU106_Gen3x4If128
          //---------------------------------------------------------------------
          //  System(SYS) Interface
          //---------------------------------------------------------------------
-         .sys_clk                                        (pcie_refclk),
-         .sys_clk_gt                                     (pcie_refclk_gt),
+         .sys_clk                                        (sys_clk),
+         .sys_clk_gt                                     (sys_clk_gt),
          .sys_reset                                      (~pcie_reset_n));
 
     riffa_wrapper_zcu106
