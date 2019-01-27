@@ -70,6 +70,7 @@ module ZCU106_Gen3x4If128
     wire                            user_clk;
     wire                            user_reset;
     wire                            pcie_refclk;
+    wire                            pcie_refclk_gt;
     wire                            pcie_reset_n;
 
     // Interface: RQ (TXC)
@@ -194,8 +195,8 @@ module ZCU106_Gen3x4If128
     IBUFDS_GTE4
         #()
     refclk_ibuf
-        (.O(pcie_refclk),
-         .ODIV2(),
+        (.O(pcie_refclk_gt),
+         .ODIV2(pcie_refclk),
          .I(PCIE_REFCLK_P),
          .CEB(1'b0),
          .IB(PCIE_REFCLK_N));
@@ -355,7 +356,7 @@ module ZCU106_Gen3x4If128
          //  System(SYS) Interface
          //---------------------------------------------------------------------
          .sys_clk                                        (pcie_refclk),
-         .sys_clk_gt                                     (pcie_refclk),
+         .sys_clk_gt                                     (pcie_refclk_gt),
          .sys_reset                                      (~pcie_reset_n));
 
     riffa_wrapper_zcu106

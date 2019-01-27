@@ -90,10 +90,13 @@
 # with these devices that contain only 1.8 V banks.
 #
 
+# See the PCIe example design for this
 set_property IOSTANDARD LVCMOS18 [get_port PCIE_RESET_N]
 set_property PACKAGE_PIN L8      [get_port PCIE_RESET_N]
 set_property PULLUP true [get_ports PCIE_RESET_N]
 
+
+# These are also taken from the PCIe Example design
 set_property IOSTANDARD LVCMOS12 [get_ports {LED[0]}]
 set_property IOSTANDARD LVCMOS12 [get_ports {LED[1]}]
 set_property IOSTANDARD LVCMOS12 [get_ports {LED[2]}]
@@ -112,6 +115,16 @@ set_property PACKAGE_PIN AM9     [get_ports {LED[5]}]
 set_property PACKAGE_PIN AM10    [get_ports {LED[6]}]
 set_property PACKAGE_PIN AM11    [get_ports {LED[7]}]
 
+set_property DRIVE 8 [get_ports {LED[0]}]
+set_property DRIVE 8 [get_ports {LED[1]}]
+set_property DRIVE 8 [get_ports {LED[2]}]
+set_property DRIVE 8 [get_ports {LED[3]}]
+set_property DRIVE 8 [get_ports {LED[4]}]
+set_property DRIVE 8 [get_ports {LED[5]}]
+set_property DRIVE 8 [get_ports {LED[6]}]
+set_property DRIVE 8 [get_ports {LED[7]}]
+
+# This tells the optimizer not to worry about optimizing paths to the LEDs
 set_false_path -to [get_ports -filter NAME=~LED*]
 
 # ZCU106 PCIe board settings
