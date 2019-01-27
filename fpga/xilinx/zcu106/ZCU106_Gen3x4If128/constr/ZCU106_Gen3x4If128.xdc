@@ -41,8 +41,7 @@
 # Description:         Xilinx Design Constraints for the ZCU106 board.
 # These constrain the PCIE_REFCLK, its DSBUF, LED Pins, and PCIE_RESET_N pin
 #
-# Authors:              Dustin Richmond (@darichmond)
-#                       Mark Harfouche (@hmaarrfk)
+# Authors:             Mark Harfouche (@hmaarrfk)
 #-----------------------------------------------------------------------------
 #
 #########################################################################################################################
