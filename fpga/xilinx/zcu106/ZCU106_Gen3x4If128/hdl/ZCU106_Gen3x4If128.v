@@ -52,7 +52,7 @@ module ZCU106_Gen3x4If128
       // Settings from Vivado IP Generator
       parameter C_PCI_DATA_WIDTH = 128,
       parameter C_MAX_PAYLOAD_BYTES = 256,
-      parameter C_LOG_NUM_TAGS = 5
+      parameter C_LOG_NUM_TAGS = 8
       )
     (output [(C_NUM_LANES - 1) : 0] PCI_EXP_TXP,
      output [(C_NUM_LANES - 1) : 0] PCI_EXP_TXN,
@@ -186,55 +186,19 @@ module ZCU106_Gen3x4If128
 
     genvar                                     chnl;
 
-    IBUF
-        #()
-    pci_reset_n_ibuf
-        (.O(pcie_reset_n),
-         .I(PCIE_RESET_N));
+    IBUF pci_reset_n_ibuf (.O(pcie_reset_n), .I(PCIE_RESET_N));
 
-    IBUFDS_GTE4 refclk_ibuf (.O(sys_clk_gt), .ODIV2(sys_clk), .I(sys_clk_p), .CEB(1'b0), .IB(sys_clk_n));
+    IBUFDS_GTE4 refclk_ibuf (.O(sys_clk_gt), .ODIV2(sys_clk), .I(pcie_refclk_p), .CEB(1'b0), .IB(pcie_refclk_n));
 
 
-    OBUF
-        #()
-    led_0_obuf
-        (.O(LED[0]),
-         .I(cfg_ltssm_state[0]));
-    OBUF
-        #()
-    led_1_obuf
-        (.O(LED[1]),
-         .I(cfg_ltssm_state[1]));
-    OBUF
-        #()
-    led_2_obuf
-        (.O(LED[2]),
-         .I(cfg_ltssm_state[2]));
-    OBUF
-        #()
-    led_3_obuf
-        (.O(LED[3]),
-         .I(cfg_ltssm_state[3]));
-    OBUF
-        #()
-    led_4_obuf
-        (.O(LED[4]),
-         .I(cfg_ltssm_state[4]));
-    OBUF
-        #()
-    led_5_obuf
-        (.O(LED[5]),
-         .I(cfg_ltssm_state[5]));
-    OBUF
-        #()
-    led_6_obuf
-        (.O(LED[6]),
-         .I(pcie_reset_n));
-    OBUF
-        #()
-    led_7_obuf
-        (.O(LED[7]),
-         .I(rst_out));
+    OBUF led_0_obuf (.O(LED[0]), .I(cfg_ltssm_state[0]));
+    OBUF led_1_obuf (.O(LED[1]), .I(cfg_ltssm_state[1]));
+    OBUF led_2_obuf (.O(LED[2]), .I(cfg_ltssm_state[2]));
+    OBUF led_3_obuf (.O(LED[3]), .I(cfg_ltssm_state[3]));
+    OBUF led_4_obuf (.O(LED[4]), .I(cfg_ltssm_state[4]));
+    OBUF led_5_obuf (.O(LED[5]), .I(cfg_ltssm_state[5]));
+    OBUF led_6_obuf (.O(LED[6]), .I(pcie_reset_n));
+    OBUF led_7_obuf (.O(LED[7]), .I(rst_out));
 
     // Core Top Level Wrapper
     PCIeGen3x4If128 PCIeGen3x4If128_i
@@ -351,7 +315,7 @@ module ZCU106_Gen3x4If128
          //---------------------------------------------------------------------
          .sys_clk                                        (sys_clk),
          .sys_clk_gt                                     (sys_clk_gt),
-         .sys_reset                                      (~pcie_reset_n));
+         .sys_reset                                      (pcie_reset_n));
 
     riffa_wrapper_zcu106
         #(/*AUTOINSTPARAM*/
