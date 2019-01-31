@@ -9,6 +9,8 @@ driver/linux/riffa.mod.c
 *.o.ur-safe
 *.o.cmd
 
+driver/linux/libriffa.so*
+
 
 # ZC706 project files...
 fpga/xilinx/zc706/ZC706_Gen2x4If128/ip/PCIeGen2x4If128.dcp
