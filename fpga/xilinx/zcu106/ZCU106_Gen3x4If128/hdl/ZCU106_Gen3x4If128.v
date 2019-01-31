@@ -60,8 +60,8 @@ module ZCU106_Gen3x4If128
      input [(C_NUM_LANES - 1) : 0]  PCI_EXP_RXN,
 
      output [7:0]                   LED,
-     input                          sys_clk_p,
-     input                          sys_clk_n,
+     input                          pcie_refclk_p,
+     input                          pcie_refclk_n,
      input                          PCIE_RESET_N
      );
 
@@ -192,14 +192,8 @@ module ZCU106_Gen3x4If128
         (.O(pcie_reset_n),
          .I(PCIE_RESET_N));
 
-    IBUFDS_GTE4
-        #()
-    refclk_ibuf
-        (.O(sys_clk_gt),
-         .ODIV2(sys_clk),
-         .I(sys_clk_p),
-         .CEB(1'b0),
-         .IB(sys_clk_n));
+    IBUFDS_GTE4 refclk_ibuf (.O(sys_clk_gt), .ODIV2(sys_clk), .I(sys_clk_p), .CEB(1'b0), .IB(sys_clk_n));
+
 
     OBUF
         #()
