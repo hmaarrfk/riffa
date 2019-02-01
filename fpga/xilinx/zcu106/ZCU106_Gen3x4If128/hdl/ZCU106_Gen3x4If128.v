@@ -191,6 +191,41 @@ module ZCU106_Gen3x4If128
     IBUFDS_GTE4 refclk_ibuf (.O(sys_clk_gt), .ODIV2(sys_clk), .I(pcie_refclk_p), .CEB(1'b0), .IB(pcie_refclk_n));
 
 
+    /*
+    00: Detect.Quiet
+    01: Detect.Active
+    02: Polling.Active
+    03: Polling.Compliance
+    04: Polling.Configuration
+    05: Configuration.Linkwidth.Start
+    06: Configuration.Linkwidth.Accept
+    07: Configuration.Lanenum.Accept
+    08: Configuration.Lanenum.Wait
+    09: Configuration.Complete
+    0A: Configuration.Idle
+    0B: Recovery.RcvrLock
+    0C: Recovery.Speed
+    0D: Recovery.RcvrCfg
+    0E: Recovery.Idle
+    10: L0
+    11-16: Reserved
+    17: L1.Entry
+    18: L1.Idle
+    19-1A: Reserved
+    20: Disabled
+    21: Loopback_Entry_Master
+    22: Loopback_Active_Master
+    23: Loopback_Exit_Master
+    24: Loopback_Entry_Slave
+    25: Loopback_Active_Slave
+    26: Loopback_Exit_Slave
+    27: Hot_Reset
+    28: Recovery_Equalization_Phase0
+    29: Recovery_Equalization_Phase1
+    2a: Recovery_Equalization_Phase2
+    2b: Recovery_Equalization_Phase3
+    */
+
     OBUF led_0_obuf (.O(LED[0]), .I(cfg_ltssm_state[0]));
     OBUF led_1_obuf (.O(LED[1]), .I(cfg_ltssm_state[1]));
     OBUF led_2_obuf (.O(LED[2]), .I(cfg_ltssm_state[2]));
