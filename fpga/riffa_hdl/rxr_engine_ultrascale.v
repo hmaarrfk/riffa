@@ -44,6 +44,7 @@
 `timescale 1ns/1ns
 `include "trellis.vh"
 `include "ultrascale.vh"
+
 module rxr_engine_ultrascale
     #(parameter C_PCI_DATA_WIDTH = 128,
       parameter C_RX_PIPELINE_DEPTH=10)
@@ -150,6 +151,22 @@ module rxr_engine_ultrascale
     wire [`SIG_TYPE_W-1:0]                              wType;
     reg                                                 rValid,_rValid;
     reg                                                 rRST;
+    
+
+    function [ `EXT_TYPE_W - 1: 0 ] upkt_to_trellis_type;
+        input [`UPKT_TYPE_W : 0 ] WR_UPKT_TYPE;
+        begin
+            /* verilator lint_off CASEX */
+            casex(WR_UPKT_TYPE)
+                {`UPKT_REQ_RD,1'bx}: upkt_to_trellis_type = `TRLS_REQ_RD;
+                {`UPKT_REQ_WR,1'bx}: upkt_to_trellis_type = `TRLS_REQ_WR;
+                {`UPKT_MSG   ,1'b0}: upkt_to_trellis_type = `TRLS_MSG_ND;
+                {`UPKT_MSG   ,1'b1}: upkt_to_trellis_type = `TRLS_MSG_WD;
+                default:             upkt_to_trellis_type = `TRLS_REQ_RD;
+            endcase
+            /* verilator lint_on CASEX */
+        end
+    endfunction // if
 
     assign DONE_RXR_RST = ~rRST;
 

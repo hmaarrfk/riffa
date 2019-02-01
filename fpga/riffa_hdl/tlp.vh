@@ -210,41 +210,24 @@
 `define TLP_MSG_ND {{3'bx01},`TLP_TYPE_MSG}
 `define TLP_MSG_WD {{3'bx11},`TLP_TYPE_MSG}
 
-function [ `EXT_TYPE_W - 1 : 0 ] tlp_to_trellis_type;
-    input [`FMT_W + `TYPE_W - 1 : 0 ] tlp_type;
-    begin
-        /* verilator lint_off CASEX */
-        casex(tlp_type)
-            `TLP_REQ_RD: tlp_to_trellis_type = `TRLS_REQ_RD;
-            `TLP_REQ_WR: tlp_to_trellis_type = `TRLS_REQ_WR;
-            `TLP_CPL_ND: tlp_to_trellis_type = `TRLS_CPL_ND;
-            `TLP_CPL_WD: tlp_to_trellis_type = `TRLS_CPL_WD;
-            `TLP_MSG_ND: tlp_to_trellis_type = `TRLS_MSG_ND; // We only use messages routed by address
-            `TLP_MSG_WD: tlp_to_trellis_type = `TRLS_MSG_WD; // We only use messages routed by address
-            default:     tlp_to_trellis_type = `TRLS_REQ_RD;
-        endcase
-        /* verilator lint_on CASEX */
-   end
-endfunction // if
+// We only use messages routed by address
+`define tlp_to_trellis_type(x) \
+   (x == `TLP_REQ_RD) ? `TRLS_REQ_RD : \
+   (x == `TLP_REQ_WR) ? `TRLS_REQ_WR : \
+   (x == `TLP_CPL_ND) ? `TRLS_CPL_ND : \
+   (x == `TLP_CPL_WD) ? `TRLS_CPL_WD : \
+   (x == `TLP_MSG_ND) ? `TRLS_MSG_ND : \
+   (x == `TLP_MSG_WD) ? `TRLS_MSG_WD : \
+   `TRLS_REQ_RD
 
-function [`FMT_W + `TYPE_W - 1 : 0 ] trellis_to_tlp_type;
-    input  [`EXT_TYPE_W - 1 : 0 ]    trellis_type;
-    input                            hdrlen_wr;
-    reg [`FMT_W + `TYPE_W - 1 : 0 ]  temp;
-    begin
-        /* verilator lint_off CASEX */
-        casex(trellis_type)
-            `TRLS_REQ_RD: temp = `TLP_REQ_RD;
-            `TRLS_REQ_WR: temp = `TLP_REQ_WR;
-            `TRLS_CPL_ND: temp = `TLP_CPL_ND;
-            `TRLS_CPL_WD: temp = `TLP_CPL_WD;
-            `TRLS_MSG_ND: temp = `TLP_MSG_ND; // We only use messages routed by address
-            `TRLS_MSG_WD: temp = `TLP_MSG_WD; // We only use messages routed by address
-            default:      temp = `TLP_REQ_RD;
-        endcase
-        /* verilator lint_on CASEX */
-        trellis_to_tlp_type = {temp[`FMT_W +`TYPE_W - 1 : `TYPE_W + 1], hdrlen_wr, temp[`TYPE_W-1:0]};
-    end
-endfunction // if
+`define trellis_to_tlp_type(trellis_type, hdrlen_wr) \
+    (trellis_type == `TRLS_REQ_RD) {`TLP_REQ_RD[`FMT_W +`TYPE_W - 1 : `TYPE_W + 1], hdrlen_wr, `TLP_REQ_RD[`TYPE_W-1:0]} : \
+    (trellis_type == `TRLS_REQ_WR) {`TLP_REQ_WR[`FMT_W +`TYPE_W - 1 : `TYPE_W + 1], hdrlen_wr, `TLP_REQ_WR[`TYPE_W-1:0]} : \
+    (trellis_type == `TRLS_CPL_ND) {`TLP_CPL_ND[`FMT_W +`TYPE_W - 1 : `TYPE_W + 1], hdrlen_wr, `TLP_CPL_ND[`TYPE_W-1:0]} : \
+    (trellis_type == `TRLS_CPL_WD) {`TLP_CPL_WD[`FMT_W +`TYPE_W - 1 : `TYPE_W + 1], hdrlen_wr, `TLP_CPL_WD[`TYPE_W-1:0]} : \
+    (trellis_type == `TRLS_MSG_ND) {`TLP_MSG_ND[`FMT_W +`TYPE_W - 1 : `TYPE_W + 1], hdrlen_wr, `TLP_CPL_ND[`TYPE_W-1:0]} : \
+    (trellis_type == `TRLS_MSG_WD) {`TLP_MSG_WD[`FMT_W +`TYPE_W - 1 : `TYPE_W + 1], hdrlen_wr, `TLP_MSG_WD[`TYPE_W-1:0]} : \
+    {`TLP_REQ_RD[`FMT_W +`TYPE_W - 1 : `TYPE_W + 1], hdrlen_wr, `TLP_REQ_RD[`TYPE_W-1:0]}
+
 `endif
 
