@@ -88,5 +88,5 @@ set_property PACKAGE_PIN AD4 [get_ports {PCI_EXP_TXP[0]}]
 set_property PACKAGE_PIN AD3 [get_ports {PCI_EXP_TXN[0]}]
 
 
-set_property PACKAGE_PIN AB7 [get_ports pcie_refclk_n]
-set_property PACKAGE_PIN AB8 [get_ports pcie_refclk_p]
+set_property PACKAGE_PIN AB7 [get_ports sys_clk_n]
+set_property PACKAGE_PIN AB8 [get_ports sys_clk_p]
