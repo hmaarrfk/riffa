@@ -90,3 +90,5 @@ set_property PACKAGE_PIN AD3 [get_ports {PCI_EXP_TXN[0]}]
 
 set_property PACKAGE_PIN AB7 [get_ports sys_clk_n]
 set_property PACKAGE_PIN AB8 [get_ports sys_clk_p]
+
+create_clock -period 10.000 -name sys_clk [get_ports sys_clk_p]

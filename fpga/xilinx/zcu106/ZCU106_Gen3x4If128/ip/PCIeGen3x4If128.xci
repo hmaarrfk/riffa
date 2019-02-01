@@ -197,7 +197,7 @@
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF0_DEV_CAP2_TPH_COMPLETER_SUPPORT">FALSE</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF0_DEV_CAP_EXT_TAG_SUPPORTED">TRUE</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF0_DEV_CAP_FUNCTION_LEVEL_RESET_CAPABLE">FALSE</spirit:configurableElementValue>
-        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF0_DEV_CAP_MAX_PAYLOAD_SIZE">0x3</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF0_DEV_CAP_MAX_PAYLOAD_SIZE">0x1</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF0_DSN_CAP_NEXTPTR">0x1C0</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF0_EXPANSION_ROM_APERTURE_SIZE">0x000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF0_EXPANSION_ROM_ENABLE">FALSE</spirit:configurableElementValue>
@@ -277,7 +277,7 @@
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF1_CAPABILITY_POINTER">0x40</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF1_CLASS_CODE">0x058000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF1_DEVICE_ID">0x9011</spirit:configurableElementValue>
-        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF1_DEV_CAP_MAX_PAYLOAD_SIZE">0x3</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF1_DEV_CAP_MAX_PAYLOAD_SIZE">0x1</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF1_DSN_CAP_NEXTPTR">0x000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF1_EXPANSION_ROM_APERTURE_SIZE">0x000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF1_EXPANSION_ROM_ENABLE">FALSE</spirit:configurableElementValue>
@@ -340,7 +340,7 @@
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF2_CAPABILITY_POINTER">0x40</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF2_CLASS_CODE">0x058000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF2_DEVICE_ID">0x9434</spirit:configurableElementValue>
-        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF2_DEV_CAP_MAX_PAYLOAD_SIZE">0x3</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF2_DEV_CAP_MAX_PAYLOAD_SIZE">0x1</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF2_DSN_CAP_NEXTPTR">0x000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF2_EXPANSION_ROM_APERTURE_SIZE">0x000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF2_EXPANSION_ROM_ENABLE">FALSE</spirit:configurableElementValue>
@@ -403,7 +403,7 @@
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF3_CAPABILITY_POINTER">0x40</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF3_CLASS_CODE">0x058000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF3_DEVICE_ID">0x9634</spirit:configurableElementValue>
-        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF3_DEV_CAP_MAX_PAYLOAD_SIZE">0x3</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF3_DEV_CAP_MAX_PAYLOAD_SIZE">0x1</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF3_DSN_CAP_NEXTPTR">0x000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF3_EXPANSION_ROM_APERTURE_SIZE">0x000</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="MODELPARAM_VALUE.PF3_EXPANSION_ROM_ENABLE">FALSE</spirit:configurableElementValue>
@@ -772,7 +772,7 @@
         <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.pf0_class_code_base">05</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.pf0_class_code_interface">00</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.pf0_class_code_sub">80</spirit:configurableElementValue>
-        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.pf0_dev_cap_max_payload">1024_bytes</spirit:configurableElementValue>
+        <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.pf0_dev_cap_max_payload">256_bytes</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.pf0_dsn_enabled">false</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.pf0_expansion_rom_enabled">false</spirit:configurableElementValue>
         <spirit:configurableElementValue spirit:referenceId="PARAM_VALUE.pf0_expansion_rom_scale">Kilobytes</spirit:configurableElementValue>
@@ -1156,6 +1156,7 @@
             <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.mode_selection" xilinx:valueSource="user"/>
             <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.pcie_blk_locn" xilinx:valueSource="user"/>
             <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.pf0_bar0_size" xilinx:valueSource="user"/>
+            <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.pf0_dev_cap_max_payload" xilinx:valueSource="user"/>
             <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.pf1_bar0_size" xilinx:valueSource="user"/>
             <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.pf2_bar0_size" xilinx:valueSource="user"/>
             <xilinx:configElementInfo xilinx:referenceId="PARAM_VALUE.pf3_bar0_size" xilinx:valueSource="user"/>
