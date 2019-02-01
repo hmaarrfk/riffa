@@ -10,6 +10,7 @@ driver/linux/riffa.mod.c
 *.o.cmd
 
 driver/linux/libriffa.so*
+c_c++/linux/x64/test_apps/testutil
 
 
 # ZC706 project files...
