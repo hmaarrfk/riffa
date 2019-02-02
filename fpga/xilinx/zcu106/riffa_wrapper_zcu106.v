@@ -163,10 +163,10 @@ module riffa_wrapper_zcu106
     wire                                          rxc_data_valid;
     wire                                          rxc_data_start_flag;
     wire [(C_PCI_DATA_WIDTH/32)-1:0]              rxc_data_word_enable;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        rxc_data_start_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       rxc_data_start_offset;
     wire [`SIG_FBE_W-1:0]                         rxc_meta_fdwbe;
     wire                                          rxc_data_end_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        rxc_data_end_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       rxc_data_end_offset;
     wire [`SIG_LBE_W-1:0]                         rxc_meta_ldwbe;
     wire [`SIG_TAG_W-1:0]                         rxc_meta_tag;
     wire [`SIG_LOWADDR_W-1:0]                     rxc_meta_addr;
@@ -184,7 +184,7 @@ module riffa_wrapper_zcu106
     wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        rxr_data_start_offset;
     wire [`SIG_FBE_W-1:0]                         rxr_meta_fdwbe;
     wire                                          rxr_data_end_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        rxr_data_end_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       rxr_data_end_offset;
     wire [`SIG_LBE_W-1:0]                         rxr_meta_ldwbe;
     wire [`SIG_TC_W-1:0]                          rxr_meta_tc;
     wire [`SIG_ATTR_W-1:0]                        rxr_meta_attr;
@@ -200,9 +200,9 @@ module riffa_wrapper_zcu106
     wire                                          txc_data_valid;
     wire [C_PCI_DATA_WIDTH-1:0]                   txc_data;
     wire                                          txc_data_start_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        txc_data_start_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       txc_data_start_offset;
     wire                                          txc_data_end_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        txc_data_end_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       txc_data_end_offset;
     wire                                          txc_data_ready;
 
     wire                                          txc_meta_valid;
@@ -224,9 +224,9 @@ module riffa_wrapper_zcu106
     wire                                          txr_data_valid;
     wire [C_PCI_DATA_WIDTH-1:0]                   txr_data;
     wire                                          txr_data_start_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        txr_data_start_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       txr_data_start_offset;
     wire                                          txr_data_end_flag;
-    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]        txr_data_end_offset;
+    wire [`clog2s(C_PCI_DATA_WIDTH/32)-1:0]       txr_data_end_offset;
     wire                                          txr_data_ready;
 
     wire                                          txr_meta_valid;

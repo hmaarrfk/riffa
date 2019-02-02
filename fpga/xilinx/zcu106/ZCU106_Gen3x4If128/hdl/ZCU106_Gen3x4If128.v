@@ -109,10 +109,15 @@ module ZCU106_Gen3x4If128
     wire [3:0]                       s_axis_cc_tready;
 
     // Configuration (CFG) Interface
-    wire [5:0]                       pcie_rq_seq_num;  // only [3:0] are used in Ultrascale+ 
-    wire                             pcie_rq_seq_num_vld;
-    wire [7:0]                       pcie_rq_tag;
-    wire                             pcie_rq_tag_vld;
+    wire [5:0]                       pcie_rq_seq_num0;  // only [3:0] are used in Ultrascale+
+    wire                             pcie_rq_seq_num_vld0;
+    wire [5:0]                       pcie_rq_seq_num1;  // only [3:0] are used in Ultrascale+
+    wire                             pcie_rq_seq_num_vld1;
+    wire [7:0]                       pcie_rq_tag0;
+    wire                             pcie_rq_tag_vld0;
+    wire [7:0]                       pcie_rq_tag1;
+    wire                             pcie_rq_tag_vld1;
+    wire [3:0]                       pcie_rq_tag_av;
     wire                             pcie_cq_np_req;
     wire [5:0]                       pcie_cq_np_req_count;
 
@@ -132,8 +137,12 @@ module ZCU106_Gen3x4If128
     wire                             cfg_err_cor_out;
     wire                             cfg_err_nonfatal_out;
     wire                             cfg_err_fatal_out;
+    wire                             cfg_local_error_valid;
+    wire [4:0]                       cfg_local_error_out;
 
-    wire [5:0]                       cfg_ltssm_state;// TODO: Connect to LED's
+    wire [5:0]                       cfg_ltssm_state;
+    wire [1:0]                       cfg_rx_pm_state;
+    wire [1:0]                       cfg_tx_pm_state;
     wire [3:0]                       cfg_rcb_status;
     wire [1:0]                       cfg_obff_enable;
     wire                             cfg_pl_status_change;
@@ -190,6 +199,8 @@ module ZCU106_Gen3x4If128
     wire [(C_NUM_CHNL*C_PCI_DATA_WIDTH)-1:0]   chnl_tx_data;
     wire [C_NUM_CHNL-1:0]                      chnl_tx_data_valid;
     wire [C_NUM_CHNL-1:0]                      chnl_tx_data_ren;
+
+    wire                                       phy_rdy_out;
 
     genvar                                     chnl;
 
@@ -291,10 +302,15 @@ module ZCU106_Gen3x4If128
          //---------------------------------------------------------------------
          //  Configuration (CFG) Interface
          //---------------------------------------------------------------------
-         .pcie_rq_seq_num0                               ( pcie_rq_seq_num ),
-         .pcie_rq_seq_num_vld0                           ( pcie_rq_seq_num_vld ),
-         .pcie_rq_tag0                                   ( pcie_rq_tag ),
-         .pcie_rq_tag_vld0                               ( pcie_rq_tag_vld ),
+         .pcie_rq_seq_num0                               ( pcie_rq_seq_num0 ),
+         .pcie_rq_seq_num_vld0                           ( pcie_rq_seq_num_vld0 ),
+         .pcie_rq_seq_num1                               ( pcie_rq_seq_num1 ),
+         .pcie_rq_seq_num_vld1                           ( pcie_rq_seq_num_vld1 ),
+         .pcie_rq_tag0                                   ( pcie_rq_tag0 ),
+         .pcie_rq_tag_vld0                               ( pcie_rq_tag_vld0 ),
+         .pcie_rq_tag1                                   ( pcie_rq_tag1 ),
+         .pcie_rq_tag_vld1                               ( pcie_rq_tag_vld1 ),
+         .pcie_rq_tag_av                                 ( pcie_rq_tag_av ),
          .pcie_cq_np_req                                 ( pcie_cq_np_req ),
          .pcie_cq_np_req_count                           ( pcie_cq_np_req_count ),
          .cfg_phy_link_down                              ( cfg_phy_link_down ),
@@ -312,7 +328,11 @@ module ZCU106_Gen3x4If128
          .cfg_err_cor_out                                ( cfg_err_cor_out ),
          .cfg_err_nonfatal_out                           ( cfg_err_nonfatal_out ),
          .cfg_err_fatal_out                              ( cfg_err_fatal_out ),
+         .cfg_local_error_valid                          ( cfg_local_error_valid ),
+         .cfg_local_error_out                            ( cfg_local_error_out ),
          .cfg_ltssm_state                                ( cfg_ltssm_state ),
+         .cfg_rx_pm_state                                ( cfg_rx_pm_state ),
+         .cfg_tx_pm_state                                ( cfg_tx_pm_state ),
          .cfg_rcb_status                                 ( cfg_rcb_status ),
          .cfg_obff_enable                                ( cfg_obff_enable ),
          .cfg_pl_status_change                           ( cfg_pl_status_change ),
@@ -355,9 +375,11 @@ module ZCU106_Gen3x4If128
          //---------------------------------------------------------------------
          //  System(SYS) Interface
          //---------------------------------------------------------------------
-         .sys_clk                                        (sys_clk),
-         .sys_clk_gt                                     (sys_clk_gt),
-         .sys_reset                                      (pcie_reset_n));
+         .sys_clk                                        ( sys_clk ),
+         .sys_clk_gt                                     ( sys_clk_gt ),
+         .sys_reset                                      ( pcie_reset_n ),
+         .phy_rdy_out                                    ( phy_rdy_out )
+         );
 
     riffa_wrapper_zcu106
         #(/*AUTOINSTPARAM*/
