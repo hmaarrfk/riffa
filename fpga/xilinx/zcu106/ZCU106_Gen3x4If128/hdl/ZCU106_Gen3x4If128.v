@@ -43,6 +43,10 @@
 `include "functions.vh"
 `include "riffa.vh"
 `include "ultrascale.vh"
+
+// Xilinx reserves [87:85] for 512-bit interfaces....
+// this basically breaks us at this stage.
+`define SIG_CQ_TUSER_W_FULL 88
 `timescale 1ps / 1ps
 module ZCU106_Gen3x4If128
     #(// Number of RIFFA Channels
@@ -89,7 +93,7 @@ module ZCU106_Gen3x4If128
     wire                             m_axis_rc_tready;
     // Interface: CQ (RXR)
     wire [C_PCI_DATA_WIDTH-1:0]      m_axis_cq_tdata;
-    wire [`SIG_CQ_TUSER_W-1:0]       m_axis_cq_tuser;
+    wire [`SIG_CQ_TUSER_W_FULL-1:0]  m_axis_cq_tuser;
     wire                             m_axis_cq_tlast;
     wire [(C_PCI_DATA_WIDTH/32)-1:0] m_axis_cq_tkeep;
     wire                             m_axis_cq_tvalid;
@@ -136,8 +140,8 @@ module ZCU106_Gen3x4If128
 
     wire [3:0]                       cfg_tph_requester_enable;
     wire [11:0]                      cfg_tph_st_mode;
-    wire [5:0]                       cfg_vf_tph_requester_enable;
-    wire [17:0]                      cfg_vf_tph_st_mode;
+    wire [251:0]                     cfg_vf_tph_requester_enable;
+    wire [755:0]                     cfg_vf_tph_st_mode;
     wire [7:0]                       cfg_fc_ph;
     wire [11:0]                      cfg_fc_pd;
     wire [7:0]                       cfg_fc_nph;
@@ -151,7 +155,7 @@ module ZCU106_Gen3x4If128
     wire [1:0]                       cfg_interrupt_pending;
     wire                             cfg_interrupt_sent;
     wire [3:0]                       cfg_interrupt_msi_enable;
-    wire [12:0]                       cfg_interrupt_msi_mmenable;
+    wire [11:0]                      cfg_interrupt_msi_mmenable;
     wire                             cfg_interrupt_msi_mask_update;
     wire [31:0]                      cfg_interrupt_msi_data;
     wire [1:0]                       cfg_interrupt_msi_select;
