@@ -78,7 +78,7 @@ module ZCU106_Gen3x4If128
     wire [C_PCI_DATA_WIDTH-1:0]     s_axis_rq_tdata;
     wire [`SIG_RQ_TUSER_W-1:0]      s_axis_rq_tuser;
     wire [(C_PCI_DATA_WIDTH/32)-1:0] s_axis_rq_tkeep;
-    wire                             s_axis_rq_tready;
+    wire [3:0]                       s_axis_rq_tready;
     wire                             s_axis_rq_tvalid;
     // Interface: RC (RXC)
     wire [C_PCI_DATA_WIDTH-1:0]      m_axis_rc_tdata;
@@ -100,25 +100,28 @@ module ZCU106_Gen3x4If128
     wire                             s_axis_cc_tlast;
     wire [(C_PCI_DATA_WIDTH/32)-1:0] s_axis_cc_tkeep;
     wire                             s_axis_cc_tvalid;
-    wire                             s_axis_cc_tready;
+    // This isn't actually a vector, but make it a vector so that we don't get warnings
+    // http://xillybus.com/tutorials/virtex-7-pcie-gen3-4
+    wire [3:0]                       s_axis_cc_tready;
 
     // Configuration (CFG) Interface
-    wire [3:0]                       pcie_rq_seq_num;
+    wire [5:0]                       pcie_rq_seq_num;  // only [3:0] are used in Ultrascale+ 
     wire                             pcie_rq_seq_num_vld;
-    wire [5:0]                       pcie_rq_tag;
+    wire [7:0]                       pcie_rq_tag;
     wire                             pcie_rq_tag_vld;
     wire                             pcie_cq_np_req;
     wire [5:0]                       pcie_cq_np_req_count;
 
     wire                             cfg_phy_link_down;
-    wire [3:0]                       cfg_negotiated_width; // CONFIG_LINK_WIDTH
-    wire [2:0]                       cfg_current_speed; // CONFIG_LINK_RATE
-    wire [2:0]                       cfg_max_payload; // CONFIG_MAX_PAYLOAD
+    wire [1:0]                       cfg_phy_link_status;
+    wire [2:0]                       cfg_negotiated_width; // CONFIG_LINK_WIDTH
+    wire [1:0]                       cfg_current_speed; // CONFIG_LINK_RATE
+    wire [1:0]                       cfg_max_payload; // CONFIG_MAX_PAYLOAD
     wire [2:0]                       cfg_max_read_req; // CONFIG_MAX_READ_REQUEST
-    wire [7:0]                       cfg_function_status; // [2] = CONFIG_BUS_MASTER_ENABLE
-    wire [5:0]                       cfg_function_power_state; // Ignorable but not removable
-    wire [11:0]                      cfg_vf_status; // Ignorable but not removable
-    wire [17:0]                      cfg_vf_power_state; // Ignorable but not removable
+    wire [15:0]                      cfg_function_status; // [2] = CONFIG_BUS_MASTER_ENABLE
+    wire [11:0]                      cfg_function_power_state; // Ignorable but not removable
+    wire [503:0]                     cfg_vf_status; // Ignorable but not removable
+    wire [755:0]                     cfg_vf_power_state; // Ignorable but not removable
     wire [1:0]                       cfg_link_power_state; // Ignorable but not removable
 
     // Error Reporting Interface
@@ -132,7 +135,7 @@ module ZCU106_Gen3x4If128
     wire                             cfg_pl_status_change;
 
     wire [1:0]                       cfg_tph_requester_enable;
-    wire [5:0]                       cfg_tph_st_mode;
+    wire [11:0]                      cfg_tph_st_mode;
     wire [5:0]                       cfg_vf_tph_requester_enable;
     wire [17:0]                      cfg_vf_tph_st_mode;
     wire [7:0]                       cfg_fc_ph;
@@ -265,14 +268,14 @@ module ZCU106_Gen3x4If128
          .m_axis_rc_tlast                                ( m_axis_rc_tlast ),
          .m_axis_rc_tkeep                                ( m_axis_rc_tkeep ),
          .m_axis_rc_tvalid                               ( m_axis_rc_tvalid ),
-         .m_axis_rc_tready                               ( {22{m_axis_rc_tready}} ),
+         .m_axis_rc_tready                               ( m_axis_rc_tready ),
 
          .m_axis_cq_tdata                                ( m_axis_cq_tdata ),
          .m_axis_cq_tuser                                ( m_axis_cq_tuser ),
          .m_axis_cq_tlast                                ( m_axis_cq_tlast ),
          .m_axis_cq_tkeep                                ( m_axis_cq_tkeep ),
          .m_axis_cq_tvalid                               ( m_axis_cq_tvalid ),
-         .m_axis_cq_tready                               ( {22{m_axis_cq_tready}} ),
+         .m_axis_cq_tready                               ( m_axis_cq_tready ),
 
          .s_axis_cc_tdata                                ( s_axis_cc_tdata ),
          .s_axis_cc_tuser                                ( s_axis_cc_tuser ),
@@ -408,8 +411,8 @@ module ZCU106_Gen3x4If128
          .M_AXIS_RC_TDATA               (m_axis_rc_tdata[C_PCI_DATA_WIDTH-1:0]),
          .M_AXIS_RC_TKEEP               (m_axis_rc_tkeep[(C_PCI_DATA_WIDTH/32)-1:0]),
          .M_AXIS_RC_TUSER               (m_axis_rc_tuser[`SIG_RC_TUSER_W-1:0]),
-         .S_AXIS_CC_TREADY              (s_axis_cc_tready),
-         .S_AXIS_RQ_TREADY              (s_axis_rq_tready),
+         .S_AXIS_CC_TREADY              (s_axis_cc_tready[0]),
+         .S_AXIS_RQ_TREADY              (s_axis_rq_tready[0]),
          .CFG_INTERRUPT_MSI_ENABLE      (cfg_interrupt_msi_enable[1:0]),
          .CFG_INTERRUPT_MSI_MASK_UPDATE (cfg_interrupt_msi_mask_update),
          .CFG_INTERRUPT_MSI_DATA        (cfg_interrupt_msi_data[31:0]),
@@ -417,11 +420,11 @@ module ZCU106_Gen3x4If128
          .CFG_INTERRUPT_MSI_FAIL        (cfg_interrupt_msi_fail),
          .CFG_FC_CPLH                   (cfg_fc_cplh[7:0]),
          .CFG_FC_CPLD                   (cfg_fc_cpld[11:0]),
-         .CFG_NEGOTIATED_WIDTH          (cfg_negotiated_width[3:0]),
-         .CFG_CURRENT_SPEED             (cfg_current_speed[2:0]),
-         .CFG_MAX_PAYLOAD               (cfg_max_payload[2:0]),
+         .CFG_NEGOTIATED_WIDTH          ({1'b0, cfg_negotiated_width[2:0]}),
+         .CFG_CURRENT_SPEED             (cfg_current_speed[1:0]),
+         .CFG_MAX_PAYLOAD               ({1'b0, cfg_max_payload[1:0]}),
          .CFG_MAX_READ_REQ              (cfg_max_read_req[2:0]),
-         .CFG_FUNCTION_STATUS           (cfg_function_status[7:0]),
+         .CFG_FUNCTION_STATUS           (cfg_function_status[15:0]),
          .CFG_RCB_STATUS                (cfg_rcb_status[1:0]),
          .CHNL_RX_CLK                   (chnl_rx_clk[C_NUM_CHNL-1:0]),
          .CHNL_RX_ACK                   (chnl_rx_ack[C_NUM_CHNL-1:0]),

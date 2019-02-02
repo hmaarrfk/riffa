@@ -110,10 +110,10 @@ module riffa_wrapper_zcu106
      output [2:0]                                 CFG_FC_SEL,
 
      input [3:0]                                  CFG_NEGOTIATED_WIDTH, // CONFIG_LINK_WIDTH
-     input [2:0]                                  CFG_CURRENT_SPEED, // CONFIG_LINK_RATE
+     input [1:0]                                  CFG_CURRENT_SPEED, // CONFIG_LINK_RATE
      input [2:0]                                  CFG_MAX_PAYLOAD, // CONFIG_MAX_PAYLOAD
      input [2:0]                                  CFG_MAX_READ_REQ, // CONFIG_MAX_READ_REQUEST
-     input [7:0]                                  CFG_FUNCTION_STATUS, // [2] = CONFIG_BUS_MASTER_ENABLE
+     input [15:0]                                 CFG_FUNCTION_STATUS, // [2] = CONFIG_BUS_MASTER_ENABLE
      input [1:0]                                  CFG_RCB_STATUS,
 
      output                                       PCIE_CQ_NP_REQ,
@@ -285,7 +285,7 @@ module riffa_wrapper_zcu106
     assign config_completer_id = 0; // Not used in ULTRASCALE implementation
     assign config_bus_master_enable = CFG_FUNCTION_STATUS[2];
     assign config_link_width = {2'b00,CFG_NEGOTIATED_WIDTH}; // CONFIG_LINK_WIDTH
-    assign config_link_rate = CFG_CURRENT_SPEED[2]? 2'b11 : CFG_CURRENT_SPEED[2] ? 2'b10 : 2'b01;
+    assign config_link_rate = CFG_CURRENT_SPEED;
     assign config_max_payload_size = CFG_MAX_PAYLOAD; // CONFIG_MAX_PAYLOAD
     assign config_max_read_request_size = CFG_MAX_READ_REQ; // CONFIG_MAX_READ_REQUEST
     assign config_cpl_boundary_sel =  CFG_RCB_STATUS[0];
