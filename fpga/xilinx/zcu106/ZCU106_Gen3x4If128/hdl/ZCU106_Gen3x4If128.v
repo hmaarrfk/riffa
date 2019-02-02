@@ -130,11 +130,11 @@ module ZCU106_Gen3x4If128
     wire                             cfg_err_fatal_out;
 
     wire [5:0]                       cfg_ltssm_state;// TODO: Connect to LED's
-    wire [1:0]                       cfg_rcb_status;
+    wire [3:0]                       cfg_rcb_status;
     wire [1:0]                       cfg_obff_enable;
     wire                             cfg_pl_status_change;
 
-    wire [1:0]                       cfg_tph_requester_enable;
+    wire [3:0]                       cfg_tph_requester_enable;
     wire [11:0]                      cfg_tph_st_mode;
     wire [5:0]                       cfg_vf_tph_requester_enable;
     wire [17:0]                      cfg_vf_tph_st_mode;
@@ -150,20 +150,20 @@ module ZCU106_Gen3x4If128
     wire [3:0]                       cfg_interrupt_int;
     wire [1:0]                       cfg_interrupt_pending;
     wire                             cfg_interrupt_sent;
-    wire [1:0]                       cfg_interrupt_msi_enable;
-    wire [5:0]                       cfg_interrupt_msi_mmenable;
+    wire [3:0]                       cfg_interrupt_msi_enable;
+    wire [12:0]                       cfg_interrupt_msi_mmenable;
     wire                             cfg_interrupt_msi_mask_update;
     wire [31:0]                      cfg_interrupt_msi_data;
-    wire [3:0]                       cfg_interrupt_msi_select;
+    wire [1:0]                       cfg_interrupt_msi_select;
     wire [31:0]                      cfg_interrupt_msi_int;
-    wire [63:0]                      cfg_interrupt_msi_pending_status;
+    wire [31:0]                      cfg_interrupt_msi_pending_status;
     wire                             cfg_interrupt_msi_pending_status_data_enable;
     wire                             cfg_interrupt_msi_sent;
     wire                             cfg_interrupt_msi_fail;
     wire [2:0]                       cfg_interrupt_msi_attr;
     wire                             cfg_interrupt_msi_tph_present;
     wire [1:0]                       cfg_interrupt_msi_tph_type;
-    wire [8:0]                       cfg_interrupt_msi_tph_st_tag;
+    wire [7:0]                       cfg_interrupt_msi_tph_st_tag;
     wire [2:0]                       cfg_interrupt_msi_function_number;
 
     wire                             rst_out;
@@ -380,14 +380,14 @@ module ZCU106_Gen3x4If128
          .USER_RESET                    (user_reset),
          .CFG_INTERRUPT_INT             (cfg_interrupt_int[3:0]),
          .CFG_INTERRUPT_PENDING         (cfg_interrupt_pending[1:0]),
-         .CFG_INTERRUPT_MSI_SELECT      (cfg_interrupt_msi_select[3:0]),
+         .CFG_INTERRUPT_MSI_SELECT      (cfg_interrupt_msi_select[1:0]),
          .CFG_INTERRUPT_MSI_INT         (cfg_interrupt_msi_int[31:0]),
-         .CFG_INTERRUPT_MSI_PENDING_STATUS(cfg_interrupt_msi_pending_status[63:0]),
+         .CFG_INTERRUPT_MSI_PENDING_STATUS(cfg_interrupt_msi_pending_status[31:0]),
          .CFG_INTERRUPT_MSI_PENDING_STATUS_DATA_ENABLE (cfg_interrupt_msi_pending_status_data_enable),
          .CFG_INTERRUPT_MSI_ATTR        (cfg_interrupt_msi_attr[2:0]),
          .CFG_INTERRUPT_MSI_TPH_PRESENT (cfg_interrupt_msi_tph_present),
          .CFG_INTERRUPT_MSI_TPH_TYPE    (cfg_interrupt_msi_tph_type[1:0]),
-         .CFG_INTERRUPT_MSI_TPH_ST_TAG  (cfg_interrupt_msi_tph_st_tag[8:0]),
+         .CFG_INTERRUPT_MSI_TPH_ST_TAG  (cfg_interrupt_msi_tph_st_tag[7:0]),
          .CFG_INTERRUPT_MSI_FUNCTION_NUMBER(cfg_interrupt_msi_function_number[2:0]),
          .CFG_FC_SEL                    (cfg_fc_sel[2:0]),
          .PCIE_CQ_NP_REQ                (pcie_cq_np_req),
@@ -413,7 +413,7 @@ module ZCU106_Gen3x4If128
          .M_AXIS_RC_TUSER               (m_axis_rc_tuser[`SIG_RC_TUSER_W-1:0]),
          .S_AXIS_CC_TREADY              (s_axis_cc_tready[0]),
          .S_AXIS_RQ_TREADY              (s_axis_rq_tready[0]),
-         .CFG_INTERRUPT_MSI_ENABLE      (cfg_interrupt_msi_enable[1:0]),
+         .CFG_INTERRUPT_MSI_ENABLE      (cfg_interrupt_msi_enable[3:0]),
          .CFG_INTERRUPT_MSI_MASK_UPDATE (cfg_interrupt_msi_mask_update),
          .CFG_INTERRUPT_MSI_DATA        (cfg_interrupt_msi_data[31:0]),
          .CFG_INTERRUPT_MSI_SENT        (cfg_interrupt_msi_sent),
@@ -425,7 +425,7 @@ module ZCU106_Gen3x4If128
          .CFG_MAX_PAYLOAD               ({1'b0, cfg_max_payload[1:0]}),
          .CFG_MAX_READ_REQ              (cfg_max_read_req[2:0]),
          .CFG_FUNCTION_STATUS           (cfg_function_status[15:0]),
-         .CFG_RCB_STATUS                (cfg_rcb_status[1:0]),
+         .CFG_RCB_STATUS                (cfg_rcb_status[3:0]),
          .CHNL_RX_CLK                   (chnl_rx_clk[C_NUM_CHNL-1:0]),
          .CHNL_RX_ACK                   (chnl_rx_ack[C_NUM_CHNL-1:0]),
          .CHNL_RX_DATA_REN              (chnl_rx_data_ren[C_NUM_CHNL-1:0]),

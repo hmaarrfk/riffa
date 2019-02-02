@@ -90,19 +90,19 @@ module riffa_wrapper_zcu106
 
      output [3:0]                                 CFG_INTERRUPT_INT,
      output [1:0]                                 CFG_INTERRUPT_PENDING,
-     input [1:0]                                  CFG_INTERRUPT_MSI_ENABLE,
+     input [3:0]                                  CFG_INTERRUPT_MSI_ENABLE,
      input                                        CFG_INTERRUPT_MSI_MASK_UPDATE,
      input [31:0]                                 CFG_INTERRUPT_MSI_DATA,
-     output [3:0]                                 CFG_INTERRUPT_MSI_SELECT,
+     output [1:0]                                 CFG_INTERRUPT_MSI_SELECT,
      output [31:0]                                CFG_INTERRUPT_MSI_INT,
      output                                       CFG_INTERRUPT_MSI_PENDING_STATUS_DATA_ENABLE,
-     output [63:0]                                CFG_INTERRUPT_MSI_PENDING_STATUS,
+     output [31:0]                                CFG_INTERRUPT_MSI_PENDING_STATUS,
      input                                        CFG_INTERRUPT_MSI_SENT,
      input                                        CFG_INTERRUPT_MSI_FAIL,
      output [2:0]                                 CFG_INTERRUPT_MSI_ATTR,
      output                                       CFG_INTERRUPT_MSI_TPH_PRESENT,
      output [1:0]                                 CFG_INTERRUPT_MSI_TPH_TYPE,
-     output [8:0]                                 CFG_INTERRUPT_MSI_TPH_ST_TAG,
+     output [7:0]                                 CFG_INTERRUPT_MSI_TPH_ST_TAG,
      output [2:0]                                 CFG_INTERRUPT_MSI_FUNCTION_NUMBER,
 
      input [7:0]                                  CFG_FC_CPLH,
@@ -114,7 +114,7 @@ module riffa_wrapper_zcu106
      input [2:0]                                  CFG_MAX_PAYLOAD, // CONFIG_MAX_PAYLOAD
      input [2:0]                                  CFG_MAX_READ_REQ, // CONFIG_MAX_READ_REQUEST
      input [15:0]                                 CFG_FUNCTION_STATUS, // [2] = CONFIG_BUS_MASTER_ENABLE
-     input [1:0]                                  CFG_RCB_STATUS,
+     input [3:0]                                  CFG_RCB_STATUS,
 
      output                                       PCIE_CQ_NP_REQ,
 
@@ -300,7 +300,7 @@ module riffa_wrapper_zcu106
     assign CFG_INTERRUPT_PENDING = 0;
     assign CFG_INTERRUPT_MSI_SELECT = 0;
     assign CFG_INTERRUPT_MSI_PENDING_STATUS_DATA_ENABLE = intr_msi_request;
-    assign CFG_INTERRUPT_MSI_PENDING_STATUS = {63'b0,intr_msi_request};
+    assign CFG_INTERRUPT_MSI_PENDING_STATUS = {31'b0,intr_msi_request};
     assign CFG_INTERRUPT_MSI_ATTR = 0;
     assign CFG_INTERRUPT_MSI_TPH_PRESENT = 0;
     assign CFG_INTERRUPT_MSI_TPH_ST_TAG = 0;
