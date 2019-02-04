@@ -55,7 +55,7 @@ module ZCU106_Gen3x4If128
       parameter C_NUM_LANES =  4,
       // Settings from Vivado IP Generator
       parameter C_PCI_DATA_WIDTH = 128,
-      parameter C_MAX_PAYLOAD_BYTES = 256,
+      parameter C_MAX_PAYLOAD_BYTES = 1024,
       parameter C_LOG_NUM_TAGS = 8
       )
     (output [(C_NUM_LANES - 1) : 0] PCI_EXP_TXP,
