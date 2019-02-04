@@ -430,7 +430,7 @@ module riffa_wrapper_zcu106
          .DONE_TXC_RST                  (done_txc_rst),
          .DONE_TXR_RST                  (done_txr_rst),
          .DONE_RXR_RST                  (done_rxc_rst),
-         .DONE_RXC_RST                  (done_rxr_rstsudo),
+         .DONE_RXC_RST                  (done_rxr_rst),
          /*AUTOINST*/
          // Outputs
          .M_AXIS_CQ_TREADY              (M_AXIS_CQ_TREADY),

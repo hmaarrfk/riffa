@@ -202,8 +202,6 @@ module ZCU106_Gen3x4If128
 
     wire                                       phy_rdy_out;
 
-    genvar                                     chnl;
-
     IBUF pci_reset_n_ibuf (.O(pcie_reset_n), .I(PCIE_RESET_N));
 
     IBUFDS_GTE4 refclk_ibuf (.O(sys_clk_gt), .ODIV2(sys_clk), .I(sys_clk_p), .CEB(1'b0), .IB(sys_clk_n));
@@ -463,6 +461,7 @@ module ZCU106_Gen3x4If128
          .CHNL_TX_DATA                  (chnl_tx_data[(C_NUM_CHNL*C_PCI_DATA_WIDTH)-1:0]),
          .CHNL_TX_DATA_VALID            (chnl_tx_data_valid[C_NUM_CHNL-1:0]));
 
+    genvar                                     chnl;
     generate
         for (chnl = 0; chnl < C_NUM_CHNL; chnl = chnl + 1) begin : test_channels
             chnl_tester
