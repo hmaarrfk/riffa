@@ -277,6 +277,8 @@ module tx_alignment_pipeline
          .OFFSET                        (__wTxHdrPacketLenMinus1[`clog2s(C_NUM_MUXES)-1:0])
          /*AUTOINST*/);
 
+    wire[31:0] minus_1_result;
+    assign minus_1_result = $unsigned(__wTxHdrPayloadLen[`clog2s(C_NUM_MUXES)-1:0])-1;
     offset_to_mask
         #(// Parameters
           .C_MASK_SWAP                  (0),
@@ -287,7 +289,7 @@ module tx_alignment_pipeline
          .MASK                          (__wTxHdrLenMask),
          // Inputs
          .OFFSET_ENABLE                 (1),
-         .OFFSET                        (__wTxHdrPayloadLen[`clog2s(C_NUM_MUXES)-1:0]-1)
+         .OFFSET                        (minus_1_result[`clog2s(C_NUM_MUXES)-1:0])
          /*AUTOINST*/);
 
     rotate
@@ -406,6 +408,7 @@ module tx_alignment_pipeline
          .ENABLE                        (wSatCtrEnable)
          /*AUTOINST*/);
 
+    wire wPktCtr_msb;
     counter
         #(// Parameters
           .C_MAX_VALUE                  (1<<`SIG_PACKETLEN_W),
@@ -414,12 +417,13 @@ module tx_alignment_pipeline
           /*AUTOINSTPARAM*/)
     pktctr_inst
         (// Outputs
-         .VALUE                         (wPktCtr),
+         .VALUE                         ({wPktCtr_msb, wPktCtr}),
          // Inputs
          .CLK                           (CLK),
          .RST_IN                        (wPktCtrReset),
          .ENABLE                        (wPktCtrEnable)
          /*AUTOINST*/);
+
 
     generate
         for( i = 0  ; i < C_MAX_HDR_WIDTH/32 ; i = i + 1) begin : gen_aggregate
