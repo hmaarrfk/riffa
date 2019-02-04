@@ -271,7 +271,7 @@ module tx_data_fifo
              .RD_DATA               (),
              .RD_DATA_VALID         (RD_TX_DATA_PACKET_VALID),
              // Inputs
-             .WR_DATA               (),
+             .WR_DATA               (1'b0),
              .WR_DATA_VALID         (wEFValid != 0),
              .RD_DATA_READY         ((RD_TX_DATA_WORD_READY & RD_TX_DATA_END_FLAGS) != 0),
              /*AUTOINST*/

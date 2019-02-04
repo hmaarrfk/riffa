@@ -484,7 +484,7 @@ module tx_alignment_pipeline
                  .RD_DATA                   (),
                  .RD_DATA_VALID             (wTxDataPacketWordValid[i]),
                  // Inputs
-                 .WR_DATA                   (),
+                 .WR_DATA                   (1'b0),
                  .WR_DATA_VALID             ((TX_DATA_END_FLAGS[i] & TX_DATA_WORD_VALID[i]) | 
                                              (TX_DATA_PACKET_VALID & TX_DATA_WORD_VALID[i] & (TX_DATA_END_FLAGS == 0))),
                  .RD_DATA_READY             (wTxDataWordReady[i] | ~wTxDataPacketWordValid[i]),
