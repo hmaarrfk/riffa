@@ -398,7 +398,7 @@ module rxr_engine_ultrascale
          .RD_DATA                       (wRxSrDataValid),
          // Inputs
          .WR_DATA                       (M_AXIS_CQ_TVALID),
-         .RST_IN                        (rRst),
+         .RST_IN                        (rRST),
          /*AUTOINST*/
          // Inputs
          .CLK                           (CLK));
