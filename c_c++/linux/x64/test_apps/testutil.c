@@ -1,24 +1,24 @@
 // ----------------------------------------------------------------------
 // Copyright (c) 2016, The Regents of the University of California All
 // rights reserved.
-// 
+//
 // Redistribution and use in source and binary forms, with or without
 // modification, are permitted provided that the following conditions are
 // met:
-// 
+//
 //     * Redistributions of source code must retain the above copyright
 //       notice, this list of conditions and the following disclaimer.
-// 
+//
 //     * Redistributions in binary form must reproduce the above
 //       copyright notice, this list of conditions and the following
 //       disclaimer in the documentation and/or other materials provided
 //       with the distribution.
-// 
+//
 //     * Neither the name of The Regents of the University of California
 //       nor the names of its contributors may be used to endorse or
 //       promote products derived from this software without specific
 //       prior written permission.
-// 
+//
 // THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 // "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
 // LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -165,7 +165,7 @@ int main(int argc, char** argv) {
 					for (i = 4; i < recvd; i++) {
 						if (recvBuffer[i] != sendBuffer[i]) {
 							printf("recvBuffer[%d]: %d, expected %d\n", i, recvBuffer[i], sendBuffer[i]);
-							return;
+							return -1;
 						}
 					}
 
@@ -202,7 +202,7 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 
-		// Malloc the arrays (page aligned) 
+		// Malloc the arrays (page aligned)
 		printf("Asked for %zu bytes\n",((maxWords*sizeof(unsigned int)*2 + 4096)/4096)*4096 + 4096);
 		err = posix_memalign((void **)&sendBuffer, 4096, ((maxWords*sizeof(unsigned int)*2 + 4096)/4096)*4096 + 4096);
 		if (sendBuffer == NULL) {
@@ -264,14 +264,14 @@ int main(int argc, char** argv) {
 					if (j > 0)
 						printf("recv bw: %f\n",
 							recvd*4.0/1000/1000/((TIME_VAL_TO_MS(2) - TIME_VAL_TO_MS(1))/1000.0)); //,
-					if(failure) 
-						return;
+					if(failure)
+						return -1;
 				}
 			}
 		}
 		// Done with device
 	        fpga_close(fpga);
-	}	
+	}
 	else if (option == 4) { // Send data, receive data
 		if (argc < 5) {
 			printf("Usage: %s %d <fpga id> <chnl> <num words to transfer>\n", argv[0], option);
@@ -292,7 +292,7 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 
-		// Malloc the arrays (page aligned) 
+		// Malloc the arrays (page aligned)
 		printf("Asked for %zu bytes\n",((maxWords*sizeof(unsigned int)*2 + 4096)/4096)*4096 + 4096);
 
 		err = posix_memalign((void **)&sendBuffer, 4096, ((maxWords*sizeof(unsigned int)*2 + 4096)/4096)*4096 + 4096);
@@ -353,8 +353,8 @@ int main(int argc, char** argv) {
 					if (j > 0)
 						printf("recv bw: %f\n",
 							recvd*4.0/1000/1000/((TIME_VAL_TO_MS(2) - TIME_VAL_TO_MS(1))/1000.0)); //,
-					if(failure) 
-						return;
+					if(failure)
+						return -1;
 
 				}
 			}
@@ -388,7 +388,7 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 
-		// Malloc the arrays (page aligned) 
+		// Malloc the arrays (page aligned)
 		printf("Asked for %zu bytes\n",((numWords*sizeof(unsigned int) + 4096)/4096)*4096 + 4096);
 		err = posix_memalign((void **)&sendBuffer, 4096, ((numWords*sizeof(unsigned int)*2 + 4096)/4096)*4096 + 4096);
 		if (err) {
@@ -442,8 +442,8 @@ int main(int argc, char** argv) {
 
 				printf("recv bw: %f\n",
 					recvd*4.0/1000/1000/((TIME_VAL_TO_MS(2) - TIME_VAL_TO_MS(1))/1000.0)); //,
-				if(failure) 
-					return;
+				if(failure)
+					return -1;
 
 			}
 		}
@@ -477,7 +477,7 @@ int main(int argc, char** argv) {
 			return -1;
 		}
 
-		// Malloc the arrays (page aligned) 
+		// Malloc the arrays (page aligned)
 		printf("Asked for %zu bytes\n",((numWords*sizeof(unsigned int) + 4096)/4096)*4096 + 4096);
 		err = posix_memalign((void **)&sendBuffer, 4096, ((numWords*sizeof(unsigned int)*2 + 4096)/4096)*4096 + 4096);
 		if (err) {
@@ -531,8 +531,8 @@ int main(int argc, char** argv) {
 
 				printf("recv bw: %f\n",
 					recvd*4.0/1000/1000/((TIME_VAL_TO_MS(2) - TIME_VAL_TO_MS(1))/1000.0)); //,
-				if(failure) 
-					return;
+				if(failure)
+					return -1;
 
 			}
 		}
