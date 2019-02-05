@@ -51,8 +51,8 @@ module riffa_wrapper_zcu106
       parameter C_PCI_DATA_WIDTH = 128,
       // 4-Byte Name for this FPGA
       parameter C_MAX_PAYLOAD_BYTES = 256,
-      parameter C_LOG_NUM_TAGS = 5,
-      parameter C_FPGA_ID = "V709")
+      parameter C_LOG_NUM_TAGS = 8,
+      parameter C_FPGA_ID = "Z106")
     (//Interface: CQ Ultrascale (RXR)
      input                                        M_AXIS_CQ_TVALID,
      input                                        M_AXIS_CQ_TLAST,
@@ -109,7 +109,7 @@ module riffa_wrapper_zcu106
      input [11:0]                                 CFG_FC_CPLD,
      output [2:0]                                 CFG_FC_SEL,
 
-     input [3:0]                                  CFG_NEGOTIATED_WIDTH, // CONFIG_LINK_WIDTH
+     input [2:0]                                  CFG_NEGOTIATED_WIDTH, // CONFIG_LINK_WIDTH
      input [1:0]                                  CFG_CURRENT_SPEED, // CONFIG_LINK_RATE
      input [2:0]                                  CFG_MAX_PAYLOAD, // CONFIG_MAX_PAYLOAD
      input [2:0]                                  CFG_MAX_READ_REQ, // CONFIG_MAX_READ_REQUEST
@@ -269,6 +269,7 @@ module riffa_wrapper_zcu106
     wire                                          config_interrupt_msienable;
     wire [`SIG_LINKRATE_W-1:0]                    config_link_rate;
     wire [`SIG_LINKWIDTH_W-1:0]                   config_link_width;
+    reg  [`SIG_LINKWIDTH_W-1:0]                   _r_config_link_width;
     wire [`SIG_MAXPAYLOAD_W-1:0]                  config_max_payload_size;
     wire [`SIG_MAXREAD_W-1:0]                     config_max_read_request_size;
     wire [`SIG_FC_CPLD_W-1:0]                     config_max_cpl_data;
@@ -282,10 +283,22 @@ module riffa_wrapper_zcu106
     assign clk = USER_CLK;
     assign rst_in = USER_RESET;
 
+    assign config_link_rate = CFG_CURRENT_SPEED;
     assign config_completer_id = 0; // Not used in ULTRASCALE implementation
     assign config_bus_master_enable = CFG_FUNCTION_STATUS[2];
-    assign config_link_width = {2'b00,CFG_NEGOTIATED_WIDTH}; // CONFIG_LINK_WIDTH
-    assign config_link_rate = CFG_CURRENT_SPEED;
+    
+    assign config_link_width = _r_config_link_width;
+    always @(*) begin
+        case(CFG_NEGOTIATED_WIDTH)
+            3'b000: _r_config_link_width = {6'b000001};
+            3'b001: _r_config_link_width = {6'b000010};
+            3'b010: _r_config_link_width = {6'b000100};
+            3'b011: _r_config_link_width = {6'b001000};
+            3'b100: _r_config_link_width = {6'b010000};
+            default: _r_config_link_width=  0;
+        endcase
+    end
+
     assign config_max_payload_size = CFG_MAX_PAYLOAD; // CONFIG_MAX_PAYLOAD
     assign config_max_read_request_size = CFG_MAX_READ_REQ; // CONFIG_MAX_READ_REQUEST
     assign config_cpl_boundary_sel =  CFG_RCB_STATUS[0];
