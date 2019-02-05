@@ -55,11 +55,11 @@ module ZCU106_Gen3x4If128
       parameter C_NUM_LANES =  4,
       // Settings from Vivado IP Generator
       parameter C_PCI_DATA_WIDTH = 128,
-      parameter C_MAX_PAYLOAD_BYTES = 1024,
+      parameter C_MAX_PAYLOAD_BYTES = 256,
       parameter C_LOG_NUM_TAGS = 8
       )
-    (output [(C_NUM_LANES - 1) : 0] PCI_EXP_TXP,
-     output [(C_NUM_LANES - 1) : 0] PCI_EXP_TXN,
+    (output [(C_NUM_LANES - 1) : 0]  PCI_EXP_TXP,
+     output [(C_NUM_LANES - 1) : 0]  PCI_EXP_TXN,
      input  [(C_NUM_LANES - 1) : 0]  PCI_EXP_RXP,
      input  [(C_NUM_LANES - 1) : 0]  PCI_EXP_RXN,
 
@@ -249,7 +249,8 @@ module ZCU106_Gen3x4If128
     OBUF led_4_obuf (.O(LED[4]), .I(cfg_ltssm_state[4]));
     OBUF led_5_obuf (.O(LED[5]), .I(cfg_ltssm_state[5]));
     OBUF led_6_obuf (.O(LED[6]), .I(pcie_reset_n));
-    OBUF led_7_obuf (.O(LED[7]), .I(rst_out));
+    // OBUF led_7_obuf (.O(LED[7]), .I(rst_out));
+    OBUF led_7_obuf(.O(LED[7]), .I(^m_axis_cq_tdata));
 
     // Core Top Level Wrapper
     PCIeGen3x4If128 PCIeGen3x4If128_i
@@ -444,8 +445,10 @@ module ZCU106_Gen3x4If128
          .CFG_INTERRUPT_MSI_FAIL        (cfg_interrupt_msi_fail),
          .CFG_FC_CPLH                   (cfg_fc_cplh[7:0]),
          .CFG_FC_CPLD                   (cfg_fc_cpld[11:0]),
-         .CFG_NEGOTIATED_WIDTH          ({1'b0, cfg_negotiated_width[2:0]}),
+         .CFG_NEGOTIATED_WIDTH          (cfg_negotiated_width[2:0]),
          .CFG_CURRENT_SPEED             (cfg_current_speed[1:0]),
+         // Max payload changed widths between Ultrascale and Ultrscale+,
+         // the LSBs still mean the same thing.
          .CFG_MAX_PAYLOAD               ({1'b0, cfg_max_payload[1:0]}),
          .CFG_MAX_READ_REQ              (cfg_max_read_req[2:0]),
          .CFG_FUNCTION_STATUS           (cfg_function_status[15:0]),
@@ -476,8 +479,8 @@ module ZCU106_Gen3x4If128
                      .CHNL_RX(chnl_rx[chnl]),
                      .CHNL_RX_ACK(chnl_rx_ack[chnl]),
                      .CHNL_RX_LAST(chnl_rx_last[chnl]),
-                     .CHNL_RX_LEN(chnl_rx_len[32*chnl +:32]),
-                     .CHNL_RX_OFF(chnl_rx_off[31*chnl +:31]),
+                     .CHNL_RX_LEN(chnl_rx_len[`SIG_CHNL_LENGTH_W*chnl +:`SIG_CHNL_LENGTH_W]),
+                     .CHNL_RX_OFF(chnl_rx_off[`SIG_CHNL_OFFSET_W*chnl +:`SIG_CHNL_OFFSET_W]),
                      .CHNL_RX_DATA(chnl_rx_data[C_PCI_DATA_WIDTH*chnl +:C_PCI_DATA_WIDTH]),
                      .CHNL_RX_DATA_VALID(chnl_rx_data_valid[chnl]),
                      .CHNL_RX_DATA_REN(chnl_rx_data_ren[chnl]),
@@ -486,8 +489,8 @@ module ZCU106_Gen3x4If128
                      .CHNL_TX(chnl_tx[chnl]),
                      .CHNL_TX_ACK(chnl_tx_ack[chnl]),
                      .CHNL_TX_LAST(chnl_tx_last[chnl]),
-                     .CHNL_TX_LEN(chnl_tx_len[32*chnl +:32]),
-                     .CHNL_TX_OFF(chnl_tx_off[31*chnl +:31]),
+                     .CHNL_TX_LEN(chnl_tx_len[`SIG_CHNL_LENGTH_W*chnl +:`SIG_CHNL_LENGTH_W]),
+                     .CHNL_TX_OFF(chnl_tx_off[`SIG_CHNL_OFFSET_W*chnl +:`SIG_CHNL_OFFSET_W]),
                      .CHNL_TX_DATA(chnl_tx_data[C_PCI_DATA_WIDTH*chnl +:C_PCI_DATA_WIDTH]),
                      .CHNL_TX_DATA_VALID(chnl_tx_data_valid[chnl]),
                      .CHNL_TX_DATA_REN(chnl_tx_data_ren[chnl])
