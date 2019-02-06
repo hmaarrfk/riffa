@@ -55,7 +55,7 @@ module ZCU106_Gen3x4If128
       parameter C_NUM_LANES =  4,
       // Settings from Vivado IP Generator
       parameter C_PCI_DATA_WIDTH = 128,
-      parameter C_MAX_PAYLOAD_BYTES = 256,
+      parameter C_MAX_PAYLOAD_BYTES = 512,
       parameter C_LOG_NUM_TAGS = 8
       )
     (output [(C_NUM_LANES - 1) : 0]  PCI_EXP_TXP,
@@ -249,8 +249,7 @@ module ZCU106_Gen3x4If128
     OBUF led_4_obuf (.O(LED[4]), .I(cfg_ltssm_state[4]));
     OBUF led_5_obuf (.O(LED[5]), .I(cfg_ltssm_state[5]));
     OBUF led_6_obuf (.O(LED[6]), .I(pcie_reset_n));
-    // OBUF led_7_obuf (.O(LED[7]), .I(rst_out));
-    OBUF led_7_obuf(.O(LED[7]), .I(^m_axis_cq_tdata));
+    OBUF led_7_obuf (.O(LED[7]), .I(rst_out));
 
     // Core Top Level Wrapper
     PCIeGen3x4If128 PCIeGen3x4If128_i
