@@ -50,7 +50,7 @@ module riffa_wrapper_zcu106
       // Bit-Width from Vivado IP Generator
       parameter C_PCI_DATA_WIDTH = 128,
       // 4-Byte Name for this FPGA
-      parameter C_MAX_PAYLOAD_BYTES = 256,
+      parameter C_MAX_PAYLOAD_BYTES = 512,
       parameter C_LOG_NUM_TAGS = 8,
       parameter C_FPGA_ID = "Z106")
     (//Interface: CQ Ultrascale (RXR)
@@ -267,6 +267,7 @@ module riffa_wrapper_zcu106
     wire [`SIG_CPLID_W-1:0]                       config_completer_id;
     wire                                          config_cpl_boundary_sel;
     wire                                          config_interrupt_msienable;
+    reg  [`SIG_LINKRATE_W-1:0]                    _r_config_link_rate;
     wire [`SIG_LINKRATE_W-1:0]                    config_link_rate;
     wire [`SIG_LINKWIDTH_W-1:0]                   config_link_width;
     reg  [`SIG_LINKWIDTH_W-1:0]                   _r_config_link_width;
@@ -283,7 +284,16 @@ module riffa_wrapper_zcu106
     assign clk = USER_CLK;
     assign rst_in = USER_RESET;
 
-    assign config_link_rate = CFG_CURRENT_SPEED;
+    // I think he uses PCIE 1.0 is 2'b01
+    always @(*) begin
+        case(CFG_CURRENT_SPEED)
+            2'b00: _r_config_link_rate = 4'b0001;
+            2'b01: _r_config_link_rate = 4'b0010;
+            2'b10: _r_config_link_rate = 4'b0011;
+            default: _r_config_link_rate  = 4'b0;
+        endcase
+    end
+    assign config_link_rate = _r_config_link_rate;
     assign config_completer_id = 0; // Not used in ULTRASCALE implementation
     assign config_bus_master_enable = CFG_FUNCTION_STATUS[2];
     
